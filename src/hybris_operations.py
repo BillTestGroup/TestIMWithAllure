@@ -205,7 +205,7 @@ def buyTANaSimSix(br, test_dude):
     return external_id, device_price, monthly_payment, full_price
 
 @allure.description("Ожидание перехода статуса заявки из 'Оформлен' в 'В работе'")
-@allure.step("Проверка статуса заявки, ожидание перехода статуса заявки из 'Оформлен' в 'В работе'"")
+@allure.step("Проверка статуса заявки, ожидание перехода статуса заявки из 'Оформлен' в 'В работе'")
 def wait_for_order_in_work(br):
     order_status = br.find_element_by_xpath("//dt[text()[contains(.,'Статус')]]/following::dd").text
     loop_counter = 0
