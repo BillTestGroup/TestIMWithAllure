@@ -11,6 +11,7 @@ passw = test_dude.password
 
 @pytest.fixture
 def br():
+    br = webdriver.Chrome(executable_path=r'C:\tools\chromedriver.exe', options=options)
     site = 'https://www.a1.by/ru/'
     br = HB.open_browser(site)
     yield br

@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    br = webdriver.Chrome(executable_path=r'C:\tools\chromedriver.exe', options=options)
+    br = webdriver.Chrome(executable_path=r'C:\tools\chromedriver\chromedriver.exe', options=options)
     br.maximize_window()
     br.get(site_to_open)
     return br
