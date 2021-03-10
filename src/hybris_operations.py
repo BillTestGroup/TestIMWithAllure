@@ -31,6 +31,8 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
+    options.add_argument('--headless')
+    options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(executable_path=r'C:\tools\chromedriver\chromedriver.exe', options=options)
     br.maximize_window()
     br.get(site_to_open)
