@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver import ActionChains
+#from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from random import randrange
 import allure
@@ -33,7 +34,7 @@ def open_browser(site_to_open):
     options.add_argument('--lang=ru')
     options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
-    br = webdriver.Chrome(executable_path=r'C:\tools\chromedriver\chromedriver.exe', options=options)
+    br = webdriver.Chrome(options=options)
     br.maximize_window()
     br.get(site_to_open)
     return br
@@ -127,7 +128,10 @@ def buyTANaSimSix(br, test_dude):
         "//*[@id='CURRENT_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
     combobox.click()
     time.sleep(1)
-    br.find_element_by_xpath("//li/div[text()[contains(., '6 мес по ')]]/..").click()
+    ac = ActionChains(br)
+    ac.move_to_element(br.find_element_by_xpath("//li/div[text()[contains(., '6 мес по ')]]/..")).perform()
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//li/div[text()[contains(., '6 мес по ')]]/.."))).click()
     # нажимаем купить
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH,
