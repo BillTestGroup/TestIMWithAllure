@@ -210,15 +210,14 @@ def buyTANaSimSix(br, test_dude):
     time.sleep(3)
     return external_id, device_price, monthly_payment, full_price
 
-
+@allure.description("Оформление покупки смартфона в рассрочку на 24 месяца")
+@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 24 месяца, переход в корзину и оформление покупки")
 def buyTANaSim24(br, test_dude):
     brand_pannel = br.find_element_by_id("facet-collapse-brand")
     brand_pannel.find_element_by_xpath("//div[@id='facet-collapse-brand']/div[1]/div/div/div[2]/button").click()
     time.sleep(3)
     cut_pop_up(br)
     brand_list = br.find_elements_by_xpath("//*[@id='facet-collapse-brand']/div/div/div/div[1]/div/div[2]/div/ul/li")
-    brand_list = br.find_elements_by_xpath(
-        "//*[@id='facet-collapse-brand']/div/div/div/div[1]/div/div[2]/div/ul/li")
     brand_num = randrange(len(brand_list))
     brand_list[brand_num].click()
     time.sleep(3)
@@ -334,7 +333,126 @@ def buyTANaSim24(br, test_dude):
     time.sleep(3)
     return external_id, device_price, monthly_payment, full_price
 
+@allure.description("Оформление покупки смартфона в рассрочку на 11 месяцев")
+@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 11 месяцев, переход в корзину и оформление покупки")
+def buyTANaSimEleven(br, test_dude):
+    brand_pannel = br.find_element_by_id("facet-collapse-brand")
+    brand_pannel.find_element_by_xpath("//div[@id='facet-collapse-brand']/div[1]/div/div/div[2]/button").click()
+    time.sleep(3)
+    cut_pop_up(br)
+    brand_list = br.find_elements_by_xpath("//*[@id='facet-collapse-brand']/div/div/div/div[1]/div/div[2]/div/ul/li")
+    brand_num = randrange(len(brand_list))
+    brand_list[brand_num].click()
+    time.sleep(3)
+    cut_pop_up(br)
+    product_list_block = br.find_element_by_xpath("//div[contains(@class, 'product-listing-content')]")
+    product_list = product_list_block.find_elements_by_xpath(
+        "//span[text()[contains(.,'Перейти к покупке')]]/../../../a")
+    cut_pop_up(br)
+    prod_num = randrange(len(product_list))
+    WebDriverWait(br, 30).until(EC.visibility_of(product_list[prod_num]))
+    time.sleep(3)
+    cut_pop_up(br)
+    product_list[prod_num].click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[contains(@class, 'live-filter-content-item active')]")))
+    cut_pop_up(br)
+    # карточка оборудования
+    combobox = br.find_element_by_xpath(
+        "//*[@id='CURRENT_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
+    combobox.click()
+    time.sleep(1)
+    br.find_element_by_xpath("//li/div[text()[contains(., '11 мес по ')]]/..").click()
+    # нажимаем купить
+    WebDriverWait(br, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "//*[@id='CURRENT_CONTRACT']//*[@class='live-filter-content-item active']//*[@class='button button--primary button--large']"))).click()
+    # переход на окно Просмотр и выбор тарифа
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,' Просмотр и выбор тарифа')]]")))
+    cut_pop_up(br)
+    br.find_element_by_xpath("//span[text()[contains(.,'Продолжить')]]/..").click()
+    cut_pop_up(br)
+    WebDriverWait(br, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]"))).click()
+    WebDriverWait(br, 30).until(
+        EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]/..")))
+    # Корзина
+    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH,
+                                                                  "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']")))
+    cut_pop_up(br)
+    br.find_element_by_xpath("//button[@class='button button--tertiary with-icon collapsed']").click()
+    time.sleep(2)
+    monthly_payment = float(
+        str(br.find_element_by_xpath(
+            "//p[text()[contains(.,'Регулярный платеж')]]/following-sibling::p//span[@class='price-value ']").text).replace(
+            " ", "").replace(",", "."))
+    full_price = float(
+        str(br.find_element_by_xpath(
+            "//p[text()[contains(.,'Итоговая стоимость')]]/following-sibling::p//span[@class='price-value ']").text).replace(
+            " ", "").replace(",", "."))
+    device_price = float(
+        str(br.find_element_by_xpath(
+            "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']").text).replace(
+            " ", "").replace(",", "."))
+    # НАЖИМАЕМ КУПИТЬ
+    WebDriverWait(br, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Купить')]]/.."))).click()
+    cut_pop_up(br)
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Личные данные')]]/..")))
+    br.find_element_by_id("submitButton").click()
+    cut_pop_up(br)
+    #окно Способ доставки
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,' Способ доставки')]]/..")))
+    delivery_method = ""
+    time.sleep(3)
+    try:
+        delivery_method = br.find_element_by_xpath("//*[text()[contains(.,'Способ доставки')]]")
+    except:
+        pass
+    if (delivery_method):
+        cut_pop_up(br)
+        br.find_element_by_xpath("//*[text()[contains(.,'Доставка курьером')]]").click()
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Данные о доставке')]]")))
+        assert br.find_element_by_xpath("//*[text()[contains(.,'Адрес')]]/following::*").text == test_dude.adres
+        WebDriverWait(br, 60).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Далее')]]/.."))).click()
+    else:
+        pass
+    payment_method = ""
+    time.sleep(3)
+    try:
+        WebDriverWait(br, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Способ оплаты')]]")))
+        payment_method = br.find_element_by_xpath("//h2[text()[contains(.,'Способ оплаты')]]")
+    except:
+        pass
 
+    if (payment_method):
+        WebDriverWait(br, 30).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//span[text()[contains(.,'Банковской картой при получении')]]"))).click()
+        cut_pop_up(br)
+        br.find_element_by_xpath("//span[text()[contains(.,'Далее')]]/..").click()
+    else:
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Состав заказа')]]")))
+        cut_pop_up(br)
+        br.find_element_by_xpath(
+            "//span[text()[contains(.,'Личные данные могут быть использованы для дополнительной проверки.')]]/..").click()
+        br.find_element_by_xpath("//span[text()[contains(.,'Подтвердить')]]/..").click()
+
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located(
+        (By.XPATH, "//*[text()[contains(.,'Мы приступили к обработке Вашего заказа.')]]")))
+    WebDriverWait(br, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'статуса')]]/../span"))).click()
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Дата размещения')]]")))
+    external_id = br.find_element_by_xpath("//h1[text()[contains(.,'Заказ ')]]").text
+    time.sleep(3)
+    return external_id, device_price, monthly_payment, full_price
 
 
 
