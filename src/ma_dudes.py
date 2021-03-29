@@ -1,4 +1,5 @@
-WSO_prod = "http://als-bscs.main.velcom.by/webShopOMS/login.xhtml"
+WSO_prod = "https://uat1-www.a1.by:7443/ru/c/shop"
+    # "http://als-bscs.main.velcom.by/webShopOMS/login.xhtml"
 
 
 class VIX_credentials():
