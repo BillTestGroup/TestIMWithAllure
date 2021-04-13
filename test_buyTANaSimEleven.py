@@ -15,7 +15,7 @@ def br():
     site = 'https://www.a1.by/ru/'
     br = HB.open_browser(site)
     yield br
-    #br.save_screenshot("./screenshots/"+(str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
+    br.save_screenshot("./screenshots/"+(str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
     br.quit()
 
 @allure.title("Покупка телефона клиентом ФЛ в рассрочку на 11 месяцев")
