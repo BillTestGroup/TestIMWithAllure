@@ -8,6 +8,7 @@ from selenium import webdriver
 from random import randrange
 import allure
 
+
 @allure.step("блокировка всплывающего окна")
 def cut_pop_up(br):
     br.execute_script("""
