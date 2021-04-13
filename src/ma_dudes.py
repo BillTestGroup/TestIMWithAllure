@@ -1,5 +1,6 @@
-WSO_prod = "https://uat1-www.a1.by:7443/ru/c/shop"
-    # "http://als-bscs.main.velcom.by/webShopOMS/login.xhtml"
+WSO_prod = "http://als-bscs.main.velcom.by/webShopOMS/login.xhtml"
+    # "https://uat1-www.a1.by:7443/ru/c/shop"
+
 
 
 class VIX_credentials():
@@ -8,10 +9,10 @@ class VIX_credentials():
 
 
 class Private_dude():
-    # msisdn = "375445840439"
-    msisdn = "375293124384"
-    # login = "445840439"
-    login = "293124384"
+    msisdn = "375445840439"
+    # msisdn = "375293124384"
+    login = "445840439"
+    # login = "293124384"
     password = "11111111Qq"
     adres = "г. Минск, ул. Интернациональная, д. 36, корп. 2, кв./оф. 808"
     FIO = "Иттест Тест Тест"
