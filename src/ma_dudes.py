@@ -9,10 +9,10 @@ class VIX_credentials():
 
 
 class Private_dude():
-    msisdn = "375445840439"
-    # msisdn = "375293124384"
-    login = "445840439"
-    # login = "293124384"
+    #msisdn = "375445840439"
+    msisdn = "375293124384"
+    #login = "445840439"
+    login = "293124384"
     password = "11111111Qq"
     adres = "г. Минск, ул. Интернациональная, д. 36, корп. 2, кв./оф. 808"
     FIO = "Иттест Тест Тест"
