@@ -3,7 +3,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver import ActionChains
-#from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from random import randrange
 import allure
@@ -26,7 +25,6 @@ def cut_pop_up(br):
            if (element)
                element.parentNode.removeChild(element);
            """)
-
 
 
 @allure.step("Открытие стариницы интернет-магазина А1")
@@ -67,6 +65,7 @@ def press_login_button(br):
     br.find_element_by_xpath('//*[@id="butt1"]').click()
     WebDriverWait(br, 30).until(EC.invisibility_of_element_located((By.XPATH, "//*[@id=\"mr\"]/div/div/section/h1")))
 
+@allure.description("Авторизация в личном кабинете интернет-магазина")
 def login_site(br, login, passw):
     login_step(br)
     pick_authorization_type(br)
@@ -223,7 +222,6 @@ def select_type_of_sale_rassrochka_24(br):
 def select_type_of_sale_full_price(br):
     WebDriverWait(br, 60).until(
         EC.visibility_of_element_located((By.XPATH, "//div[contains(@class, 'live-filter-content-item active')]")))
-    offer_block = br.find_element_by_xpath("//div[contains(@class, 'live-filter-content-item active')]")
     cut_pop_up(br)
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Полная цена')]]/.."))).click()
@@ -291,8 +289,6 @@ def select_rate_plan_for_new_customer(br):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located(
             (By.XPATH, "//button/span[text()[contains(.,'Продолжить')]]/.."))).click()
-
-
 
 
 @allure.step("Окно 'Просмотр и выбор тарифа'")
@@ -649,6 +645,8 @@ def select_payment_method_(br):
         cut_pop_up(br)
         br.find_element_by_xpath("//span[text()[contains(.,'Далее')]]/..").click()
 
+
+
 @allure.step("Проверка состава заказа")
 def check_order_details(br):
     WebDriverWait(br, 30).until(
@@ -687,342 +685,6 @@ def order_confirmation_for_new_custmer(br):
     time.sleep(1)
 
 ###########################################################################
-@allure.description("Оформление покупки смартфона в рассрочку на 6 месяцев")
-@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 6 месяцев, переход в корзину и оформление покупки")
-def buyTANaSimSix(br, test_dude):
-    select_brand(br)
-    select_product(br)
-    select_type_of_sale_rassrochka_6(br)
-    view_and_select_rate_plan(br)
-    go_to_cart(br)
-    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
-    personal_data_view(br)
-    select_delivery_method(br, test_dude)
-    select_payment_method(br)
-    check_order_details(br)
-    external_id = order_confirmation(br)
-    return external_id, device_price, monthly_payment, full_price
-###########################################################################
-
-@allure.description("Оформление покупки смартфона в рассрочку на 24 месяца")
-@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 24 месяца, переход в корзину и оформление покупки")
-def buyTANaSim24(br, test_dude):
-    select_brand(br)
-    select_product(br)
-    select_type_of_sale_rassrochka_24(br)
-    view_and_select_rate_plan(br)
-    go_to_cart(br)
-    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
-    personal_data_view(br)
-    select_delivery_method(br, test_dude)
-    select_payment_method(br)
-    check_order_details(br)
-    external_id = order_confirmation(br)
-    return external_id, device_price, monthly_payment, full_price
-
-
-###########################################################################
-
-@allure.description("Оформление покупки смартфона в рассрочку на 11 месяцев")
-@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 11 месяцев, переход в корзину и оформление покупки")
-def buyTANaSimEleven(br, test_dude):
-    select_brand(br)
-    select_product(br)
-    select_type_of_sale_rassrochka_11(br)
-    view_and_select_rate_plan(br)
-    go_to_cart(br)
-    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
-    personal_data_view(br)
-    select_delivery_method(br, test_dude)
-    select_payment_method(br)
-    check_order_details(br)
-    external_id = order_confirmation(br)
-    return external_id, device_price, monthly_payment, full_price
-
-###########################################################################
-
-@allure.description("Ожидание перехода статуса заявки из 'Оформлен' в 'В работе'")
-@allure.step("Проверка статуса заявки, ожидание перехода статуса заявки из 'Оформлен' в 'В работе'")
-def wait_for_order_in_work(br):
-    order_status = br.find_element_by_xpath("//dt[text()[contains(.,'Статус')]]/following::dd").text
-    loop_counter = 0
-    while order_status == "Оформлен" and loop_counter <= 30:
-        time.sleep(5)
-        loop_counter = loop_counter + 1
-        br.refresh()
-        cut_pop_up(br)
-        WebDriverWait(br, 30).until(
-            EC.visibility_of_element_located((By.XPATH, "//dt[text()[contains(.,'Статус')]]/following::dd")))
-        order_status = br.find_element_by_xpath("//dt[text()[contains(.,'Статус')]]/following::dd").text
-    assert order_status == "В работе", f"Статус заявки в WSO {order_status}"
-###########################################################################
-
-@allure.step("Загрузка модуля WSO")
-def open_wso(br, wso_link):
-    br.get(wso_link)
-    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='loginSection']")))
-
-@allure.step("Ввод логина в модуль WSO")
-def enter_login(br, vix_creds):
-    br.find_element_by_xpath("//input[@name='username']").send_keys(vix_creds.prod_login)
-
-@allure.step("Ввод пароля в модуль WSO")
-def enter_password(br, vix_creds):
-    br.find_element_by_xpath("//input[@name='password']").send_keys(vix_creds.prod_password)
-
-@allure.step("Вход в модуль WSO")
-def click_enter(br):
-    br.find_element_by_xpath("//input[@type='submit']").click()
-
-@allure.step("Выбор точки продаж")
-def select_point_of_sale(br):
-    WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выбор точки продажи')]]")))
-    br.find_element_by_xpath("//input[@id='stchooseOfficeForm:officeAutocomplete_input']").send_keys("-2833")
-    WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'-2833')]]"))).click()
-    WebDriverWait(br, 30).until(
-        EC.element_to_be_clickable((By.XPATH, "//*[@id='stchooseOfficeForm:chooseOffice']"))).click()
-    WebDriverWait(br, 30).until(
-        EC.invisibility_of_element_located((By.XPATH, "//*[@id='stchooseOfficeForm:chooseOffice']")))
-
-
-@allure.step("Загрузка модуля WSO для проверки корректности передачи заявки и ее данных из ИМ в WSO")
-def log_in_wso(br, wso_link, vix_creds):
-    open_wso(br, wso_link)
-    enter_login(br, vix_creds)
-    enter_password(br, vix_creds)
-    click_enter(br)
-    select_point_of_sale(br)
-
-
-
-@allure.step("Выбор меню-интернет-магазин-поиск заявок")
-def select_menu_internet_shop(br):
-    ac = ActionChains(br)
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.XPATH, "//form[@id='menuForm']")))
-    ac.move_to_element((br.find_element_by_xpath("//span[text()[contains(.,'Операции')]]"))).perform()
-    ac.move_to_element((br.find_element_by_xpath("//span[text()[contains(.,'Интернет магазин')]]"))).perform()
-    br.find_element_by_xpath("//span[text()[contains(.,'Поиск заявок')]]").click()
-    WebDriverWait(br, 60).until(
-        EC.visibility_of_element_located((By.XPATH, "//div[@id='webShopOrderSearchForm:webShopOrderPanel_content']")))
-
-@allure.step("Поиск заявки по номеру")
-def find_order(br, external_id):
-    order_external_id = str(external_id).replace("Заказ ", '')
-    br.find_element_by_xpath("//td[text()[contains(.,'ID во внешн. системе')]]/following::td/input").send_keys(
-        order_external_id)
-    br.find_element_by_id("webShopOrderSearchForm:findWebShopOrderBtn").click()
-    time.sleep(3)
-    return order_external_id
-
-@allure.step("")
-def find_order_by_customer_name(br, test_dude):
-    br.find_element_by_id("webShopOrderSearchForm:nameCustomer").send_keys(test_dude.FIO)
-    time.sleep(3)
-    today = time.strftime("%d.%m.%Y")
-    br.find_element_by_id("webShopOrderSearchForm:fromDate_input").clear()
-    br.find_element_by_id("webShopOrderSearchForm:fromDate_input").send_keys(today)
-    time.sleep(3)
-    br.find_element_by_id("webShopOrderSearchForm:status").click()
-    time.sleep(3)
-    br.find_element_by_xpath("//*[@id='webShopOrderSearchForm:status_2']").click()
-    time.sleep(3)
-    br.find_element_by_id("webShopOrderSearchForm:findWebShopOrderBtn").click()
-
-@allure.step("Получение таблицы с результатами поиска, сравнение полученных данных")
-def view_search_results(br, test_dude, order_external_id):
-    WebDriverWait(br, 60).until(EC.invisibility_of_element_located(
-        (By.XPATH, "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr[2]")))
-    assert str(br.find_element_by_xpath(
-        "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[3]").text).strip() == order_external_id, "Внешний ID заявки в WSO не соответствует отобразившемуся в ИМ"
-    assert str(br.find_element_by_xpath(
-        "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[6]").text).strip() == test_dude.FIO, "Отобразилось неверное ФИО абонента"
-
-@allure.step("Получение таблицы с результатами поиска, сравнение полученных данных")
-def view_search_result(br, test_dude):
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located(
-        (By.XPATH, "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']")))
-    time.sleep(2)
-    assert str(br.find_element_by_xpath(
-        "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[6]").text).strip() == test_dude.FIO, "Отобразилось неверное ФИО абонента"
-
-
-@allure.step("Нажать на ссылку с номером заявки для просмотра деталей")
-def view_order_details(br):
-    br.find_element_by_xpath("//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[2]/a").click()
-    WebDriverWait(br, 60).until(
-        EC.visibility_of_element_located((By.XPATH, "//div[@id='hybrisOrderDetailForm:rootOrderDetailPanel_header']")))
-
-@allure.step("Сравнение номера заявки")
-def check_order_id(br, order_external_id):
-    assert br.find_element_by_xpath(
-        "//span[text()[contains(.,'ID заявки во внешней системе:')]]/../following::div[1]/span").text == order_external_id
-
-@allure.step("Сравнение ФИО")
-def check_fio(br, test_dude):
-    assert br.find_element_by_xpath("//span[text()[contains(.,'ФИО')]]/../following::div[1]/span").text == test_dude.FIO
-
-@allure.step("Сравнение адреса")
-def check_adress(br, test_dude):
-    displayed_adress = str(br.find_element_by_xpath(
-        "//div[text()[contains(.,'Адрес доставки')]]/following::div[1]/div/span").text).replace("\n", " ")
-    assert displayed_adress == test_dude.adres.replace("кв./оф.", "кв.")
-
-@allure.step("Сравнение стоимости оборудования")
-def check_prices(br, device_price, monthly_payment, full_price):
-    final_price = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
-    assert final_price == device_price
-
-    monthly_pay_IM = monthly_payment
-    monthly_pay_WSO = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(",", "."))
-    assert monthly_pay_IM == monthly_pay_WSO
-
-    full_price_IM = full_price
-    full_price_WSO = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(",", "."))
-    assert full_price_IM == full_price_WSO
-
-
-
-@allure.step()
-def check_prices_for_new_customer(br, device_price, monthly_payment, full_price):
-    final_price = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
-    assert final_price == device_price
-    monthly_pay_IM = monthly_payment
-    monthly_pay_WSO = float(str(br.find_element_by_xpath(
-         "//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(",", "."))
-    assert monthly_pay_IM == monthly_pay_WSO
-    full_price_IM = full_price
-    full_price_WSO = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(",", "."))
-    assert full_price_IM == full_price_WSO
-
-
-@allure.step("Сравнение стоимости оборудования и Каско")
-def check_full_prices_with_kasko(br, device_price, phone_monthly_payment, phone_full_price, kasko_full_price):
-    final_price = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
-    assert final_price == device_price
-
-    monthly_pay_IM_TA = phone_monthly_payment
-    monthly_pay_WSO_TA = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert monthly_pay_IM_TA == monthly_pay_WSO_TA
-
-    full_price_IM_TA = phone_full_price
-    full_price_WSO_TA = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert full_price_IM_TA == full_price_WSO_TA
-
-    full_price_IM_KASKO = kasko_full_price
-    full_price_WSO_KASKO = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'СМАРТ гарантия')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert full_price_IM_KASKO == full_price_WSO_KASKO
-
-@allure.step("Сравнение стоимости оборудования и Каско")
-def check_prices_with_kasko_installment(br,device_price, phone_monthly_payment, phone_full_price, kasko_monthly_payment, kasko_full_price):
-    final_price = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
-    assert final_price == device_price
-
-    monthly_pay_IM_TA = phone_monthly_payment
-    monthly_pay_WSO_TA = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert monthly_pay_IM_TA == monthly_pay_WSO_TA
-
-    full_price_IM_TA = phone_full_price
-    full_price_WSO_TA = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert full_price_IM_TA == full_price_WSO_TA
-
-    full_price_IM_KASKO = kasko_full_price
-    full_price_WSO_KASKO = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'СМАРТ гарантия')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert full_price_IM_KASKO == full_price_WSO_KASKO
-
-    monthly_pay_IM_KASKO = kasko_monthly_payment
-    monthly_pay_WSO_KASKO = float(str(br.find_element_by_xpath(
-        "//*[text()[contains(.,'СМАРТ гарантия')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(
-        ",", "."))
-    assert monthly_pay_IM_KASKO == monthly_pay_WSO_KASKO
-
-
-
-@allure.step("Сравнение выбранного ТП и стоимости нового подключения")
-def check_prices_new_sim(br, product_price, rate_plan):
-    final_price = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
-    assert final_price == product_price
-
-    assert br.find_element_by_xpath("//*[text()[contains(.,'Тарифный план')]]/../div[2]/div/label").text == rate_plan, f"ТП не совпадают"
-    assert br.find_element_by_xpath(
-        "//*[text()[contains(.,'Тип SIM-карты')]]/../div[2]/div/label").text == "Universal", "Тип сим не совпадает"
-
-@allure.step("Сравнение полной стоимости оборудования")
-def check_full_price(br, device_price):
-    final_price = float(str(br.find_element_by_xpath(
-        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
-    assert final_price == device_price
-
-@allure.step("Смена статуса заявки на 'Отклонена ИМ'")
-def change_status_for_rejected(br):
-    br.find_element_by_xpath("//*[text()[contains(.,'Сменить статус')]]/..").click()
-    br.find_element_by_xpath("//span[text()[contains(.,'Отклонена ИМ')]]/../..").click()
-    WebDriverWait(br, 60).until(
-        EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:confirmChangeStatusDialog")))
-    br.find_element_by_id("hybrisOrderDetailForm:confirmChangeStatus").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
-    br.find_element_by_xpath("//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]").send_keys(
-        "test test")
-    br.find_element_by_xpath(
-        "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
-    assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
-
-@allure.step("Смена статуса заявки на 'Завершена/Отказ ИМ'")
-def change_status_for_closed(br):
-    br.find_element_by_xpath("//*[text()[contains(.,'Сменить статус')]]/..").click()
-    br.find_element_by_xpath("//span[text()[contains(.,'Завершена/Отказ ИМ')]]/../..").click()
-    WebDriverWait(br, 60).until(
-        EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:confirmChangeStatusDialog")))
-    br.find_element_by_id("hybrisOrderDetailForm:confirmChangeStatus").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
-    br.find_element_by_xpath("//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]").send_keys(
-        "test test")
-    br.find_element_by_xpath(
-        "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
-    assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
-    assert br.find_element_by_xpath(
-        "//div[@id='hybrisOrderDetailForm:rootOrderDetailPanel_header']/span").text == "Текущий статус - Завершена/Отказ ИМ"
-
-################################################################################################
-@allure.description("Поиск и открытие созданной заявки для сравнения данных и закрытия заявки")
-@allure.step("Анализ данных заявки, сравнение данных и закрытие заявки")
-def check_wso_installment(br, test_dude, external_id, device_price, monthly_payment, full_price):
-    select_menu_internet_shop(br)
-    order_external_id = find_order(br, external_id)
-    view_search_results(br, test_dude, order_external_id)
-    view_order_details(br)
-    check_order_id(br, order_external_id)
-    check_fio(br, test_dude)
-    check_adress(br, test_dude)
-    check_prices(br, device_price, monthly_payment, full_price)
-    change_status_for_rejected(br)
-    change_status_for_closed(br)
-
-
-############################################################################3
 @allure.step("Переход на вкладку 'Аксессуары'")
 def go_to_accessory(br):
     WebDriverWait(br, 30).until(
@@ -1156,26 +818,6 @@ def order_list(br):
 
 
 ###########################################################################
-
-@allure.description("Оформление покупки аксессуара")
-@allure.step("Оформление покупки аксессуара")
-def buy_accessory(br, test_dude):
-    go_to_accessory(br)
-    select_brand_for_accessory(br)
-    select_product(br)
-    check_accessory_page(br)
-    select_accessory(br)
-    step_2(br)
-    check_cart_with_accessory(br)
-    personal_data_window(br)
-    select_delivery_method(br, test_dude)
-    select_payment_method_for_order(br)
-    device_price, monthly_payment, full_price = order_list(br)
-    select_payment_method(br)
-    external_id = order_confirmation(br)
-    return external_id, device_price, monthly_payment, full_price
-##############################################################################
-
 @allure.step("Выбор типа продажи для продажи оборудования вместе с Каско")
 def select_type_of_sale_for_kasko(br):
     WebDriverWait(br, 60).until(
@@ -1338,7 +980,342 @@ def order_with_installment_prices_confirmation(br):
     br.find_element_by_xpath("//span[text()[contains(.,'Подтвердить')]]/..").click()
     return phone_monthly_payment, phone_full_price, kasko_monthly_payment, kasko_full_price
 
-#########################################################################
+###########################################################################
+
+@allure.description("Ожидание перехода статуса заявки из 'Оформлен' в 'В работе'")
+@allure.step("Проверка статуса заявки, ожидание перехода статуса заявки из 'Оформлен' в 'В работе'")
+def wait_for_order_in_work(br):
+    order_status = br.find_element_by_xpath("//dt[text()[contains(.,'Статус')]]/following::dd").text
+    loop_counter = 0
+    while order_status == "Оформлен" and loop_counter <= 30:
+        time.sleep(5)
+        loop_counter = loop_counter + 1
+        br.refresh()
+        cut_pop_up(br)
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//dt[text()[contains(.,'Статус')]]/following::dd")))
+        order_status = br.find_element_by_xpath("//dt[text()[contains(.,'Статус')]]/following::dd").text
+    assert order_status == "В работе", f"Статус заявки в WSO {order_status}"
+###########################################################################
+
+@allure.step("Загрузка модуля WSO")
+def open_wso(br, wso_link):
+    br.get(wso_link)
+    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='loginSection']")))
+
+@allure.step("Ввод логина в модуль WSO")
+def enter_login(br, vix_creds):
+    br.find_element_by_xpath("//input[@name='username']").send_keys(vix_creds.prod_login)
+
+@allure.step("Ввод пароля в модуль WSO")
+def enter_password(br, vix_creds):
+    br.find_element_by_xpath("//input[@name='password']").send_keys(vix_creds.prod_password)
+
+@allure.step("Вход в модуль WSO")
+def click_enter(br):
+    br.find_element_by_xpath("//input[@type='submit']").click()
+
+@allure.step("Выбор точки продаж")
+def select_point_of_sale(br):
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выбор точки продажи')]]")))
+    br.find_element_by_xpath("//input[@id='stchooseOfficeForm:officeAutocomplete_input']").send_keys("-2833")
+    WebDriverWait(br, 30).until(
+        EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'-2833')]]"))).click()
+    WebDriverWait(br, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "//*[@id='stchooseOfficeForm:chooseOffice']"))).click()
+    WebDriverWait(br, 30).until(
+        EC.invisibility_of_element_located((By.XPATH, "//*[@id='stchooseOfficeForm:chooseOffice']")))
+
+
+@allure.step("Загрузка модуля WSO для проверки корректности передачи заявки и ее данных из ИМ в WSO")
+def log_in_wso(br, wso_link, vix_creds):
+    open_wso(br, wso_link)
+    enter_login(br, vix_creds)
+    enter_password(br, vix_creds)
+    click_enter(br)
+    select_point_of_sale(br)
+
+
+
+@allure.step("Выбор меню-интернет-магазин-поиск заявок")
+def select_menu_internet_shop(br):
+    ac = ActionChains(br)
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.XPATH, "//form[@id='menuForm']")))
+    ac.move_to_element((br.find_element_by_xpath("//span[text()[contains(.,'Операции')]]"))).perform()
+    ac.move_to_element((br.find_element_by_xpath("//span[text()[contains(.,'Интернет магазин')]]"))).perform()
+    br.find_element_by_xpath("//span[text()[contains(.,'Поиск заявок')]]").click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[@id='webShopOrderSearchForm:webShopOrderPanel_content']")))
+
+@allure.step("Поиск заявки по номеру")
+def find_order(br, external_id):
+    order_external_id = str(external_id).replace("Заказ ", '')
+    br.find_element_by_xpath("//td[text()[contains(.,'ID во внешн. системе')]]/following::td/input").send_keys(
+        order_external_id)
+    br.find_element_by_id("webShopOrderSearchForm:findWebShopOrderBtn").click()
+    time.sleep(3)
+    return order_external_id
+
+@allure.step("")
+def find_order_by_customer_name(br, test_dude):
+    br.find_element_by_id("webShopOrderSearchForm:nameCustomer").send_keys(test_dude.FIO)
+    time.sleep(3)
+    today = time.strftime("%d.%m.%Y")
+    br.find_element_by_id("webShopOrderSearchForm:fromDate_input").clear()
+    br.find_element_by_id("webShopOrderSearchForm:fromDate_input").send_keys(today)
+    time.sleep(3)
+    br.find_element_by_id("webShopOrderSearchForm:status").click()
+    time.sleep(3)
+    br.find_element_by_xpath("//*[@id='webShopOrderSearchForm:status_2']").click()
+    time.sleep(3)
+    br.find_element_by_id("webShopOrderSearchForm:findWebShopOrderBtn").click()
+
+@allure.step("Получение таблицы с результатами поиска, сравнение полученных данных")
+def view_search_results(br, test_dude, order_external_id):
+    WebDriverWait(br, 60).until(EC.invisibility_of_element_located(
+        (By.XPATH, "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr[2]")))
+    assert str(br.find_element_by_xpath(
+        "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[3]").text).strip() == order_external_id, "Внешний ID заявки в WSO не соответствует отобразившемуся в ИМ"
+    assert str(br.find_element_by_xpath(
+        "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[6]").text).strip() == test_dude.FIO, "Отобразилось неверное ФИО абонента"
+
+@allure.step("Получение таблицы с результатами поиска, сравнение полученных данных")
+def view_search_result(br, test_dude):
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located(
+        (By.XPATH, "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']")))
+    time.sleep(2)
+    assert str(br.find_element_by_xpath(
+        "//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[6]").text).strip() == test_dude.FIO, "Отобразилось неверное ФИО абонента"
+
+
+@allure.step("Нажать на ссылку с номером заявки для просмотра деталей")
+def view_order_details(br):
+    br.find_element_by_xpath("//*[@id='webShopOrderSearchForm:WebShopOrdersList_data']/tr/td[2]/a").click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[@id='hybrisOrderDetailForm:rootOrderDetailPanel_header']")))
+
+@allure.step("Сравнение номера заявки")
+def check_order_id(br, order_external_id):
+    assert br.find_element_by_xpath(
+        "//span[text()[contains(.,'ID заявки во внешней системе:')]]/../following::div[1]/span").text == order_external_id
+
+@allure.step("Сравнение ФИО")
+def check_fio(br, test_dude):
+    assert br.find_element_by_xpath("//span[text()[contains(.,'ФИО')]]/../following::div[1]/span").text == test_dude.FIO
+
+@allure.step("Сравнение адреса")
+def check_adress(br, test_dude):
+    displayed_adress = str(br.find_element_by_xpath(
+        "//div[text()[contains(.,'Адрес доставки')]]/following::div[1]/div/span").text).replace("\n", " ")
+    assert displayed_adress == test_dude.adres.replace("кв./оф.", "кв.")
+
+@allure.step("Сравнение стоимости оборудования")
+def check_prices(br, device_price, monthly_payment, full_price):
+    final_price = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
+    assert final_price == device_price
+
+    monthly_pay_IM = monthly_payment
+    monthly_pay_WSO = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(",", "."))
+    assert monthly_pay_IM == monthly_pay_WSO
+
+    full_price_IM = full_price
+    full_price_WSO = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(",", "."))
+    assert full_price_IM == full_price_WSO
+
+
+@allure.step("Сравнение стоимости оборудования")
+def check_prices_for_new_customer(br, device_price, monthly_payment, full_price):
+    final_price = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
+    assert final_price == device_price
+    monthly_pay_IM = monthly_payment
+    monthly_pay_WSO = float(str(br.find_element_by_xpath(
+         "//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(",", "."))
+    assert monthly_pay_IM == monthly_pay_WSO
+    full_price_IM = full_price
+    full_price_WSO = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(",", "."))
+    assert full_price_IM == full_price_WSO
+
+
+@allure.step("Сравнение стоимости оборудования и Каско")
+def check_full_prices_with_kasko(br, device_price, phone_monthly_payment, phone_full_price, kasko_full_price):
+    final_price = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
+    assert final_price == device_price
+
+    monthly_pay_IM_TA = phone_monthly_payment
+    monthly_pay_WSO_TA = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert monthly_pay_IM_TA == monthly_pay_WSO_TA
+
+    full_price_IM_TA = phone_full_price
+    full_price_WSO_TA = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert full_price_IM_TA == full_price_WSO_TA
+
+    full_price_IM_KASKO = kasko_full_price
+    full_price_WSO_KASKO = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'СМАРТ гарантия')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert full_price_IM_KASKO == full_price_WSO_KASKO
+
+@allure.step("Сравнение стоимости оборудования и Каско")
+def check_prices_with_kasko_installment(br,device_price, phone_monthly_payment, phone_full_price, kasko_monthly_payment, kasko_full_price):
+    final_price = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
+    assert final_price == device_price
+
+    monthly_pay_IM_TA = phone_monthly_payment
+    monthly_pay_WSO_TA = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert monthly_pay_IM_TA == monthly_pay_WSO_TA
+
+    full_price_IM_TA = phone_full_price
+    full_price_WSO_TA = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'Продажа оборудования')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert full_price_IM_TA == full_price_WSO_TA
+
+    full_price_IM_KASKO = kasko_full_price
+    full_price_WSO_KASKO = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'СМАРТ гарантия')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Полная стоимость:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert full_price_IM_KASKO == full_price_WSO_KASKO
+
+    monthly_pay_IM_KASKO = kasko_monthly_payment
+    monthly_pay_WSO_KASKO = float(str(br.find_element_by_xpath(
+        "//*[text()[contains(.,'СМАРТ гарантия')]]/../../..//div[text()[contains(.,'Данные по оборудованию')]]/..//span[text()[contains(.,'Ежемесячно:')]]/../following::div[1]/span").text).replace(
+        ",", "."))
+    assert monthly_pay_IM_KASKO == monthly_pay_WSO_KASKO
+
+
+
+@allure.step("Сравнение выбранного ТП и стоимости нового подключения")
+def check_prices_new_sim(br, product_price, rate_plan):
+    final_price = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
+    assert final_price == product_price
+
+    assert br.find_element_by_xpath("//*[text()[contains(.,'Тарифный план')]]/../div[2]/div/label").text == rate_plan, f"ТП не совпадают"
+    assert br.find_element_by_xpath(
+        "//*[text()[contains(.,'Тип SIM-карты')]]/../div[2]/div/label").text == "Universal", "Тип сим не совпадает"
+
+@allure.step("Сравнение полной стоимости оборудования")
+def check_full_price(br, device_price):
+    final_price = float(str(br.find_element_by_xpath(
+        "//span[text()[contains(.,'Итого к оплате')]]/../following::div[1]/span").text).replace(",", "."))
+    assert final_price == device_price
+
+@allure.step("Смена статуса заявки на 'Отклонена ИМ'")
+def change_status_for_rejected(br):
+    br.find_element_by_xpath("//*[text()[contains(.,'Сменить статус')]]/..").click()
+    br.find_element_by_xpath("//span[text()[contains(.,'Отклонена ИМ')]]/../..").click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:confirmChangeStatusDialog")))
+    br.find_element_by_id("hybrisOrderDetailForm:confirmChangeStatus").click()
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
+    br.find_element_by_xpath("//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]").send_keys(
+        "test test")
+    br.find_element_by_xpath(
+        "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
+    assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
+
+@allure.step("Смена статуса заявки на 'Завершена/Отказ ИМ'")
+def change_status_for_closed(br):
+    br.find_element_by_xpath("//*[text()[contains(.,'Сменить статус')]]/..").click()
+    br.find_element_by_xpath("//span[text()[contains(.,'Завершена/Отказ ИМ')]]/../..").click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:confirmChangeStatusDialog")))
+    br.find_element_by_id("hybrisOrderDetailForm:confirmChangeStatus").click()
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
+    br.find_element_by_xpath("//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]").send_keys(
+        "test test")
+    br.find_element_by_xpath(
+        "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
+    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
+    assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
+    assert br.find_element_by_xpath(
+        "//div[@id='hybrisOrderDetailForm:rootOrderDetailPanel_header']/span").text == "Текущий статус - Завершена/Отказ ИМ"
+
+################################################################################################
+@allure.description("Оформление покупки смартфона в рассрочку на 6 месяцев")
+@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 6 месяцев, переход в корзину и оформление покупки")
+def buyTANaSimSix(br, test_dude):
+    select_brand(br)
+    select_product(br)
+    select_type_of_sale_rassrochka_6(br)
+    view_and_select_rate_plan(br)
+    go_to_cart(br)
+    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
+    personal_data_view(br)
+    select_delivery_method(br, test_dude)
+    select_payment_method(br)
+    check_order_details(br)
+    external_id = order_confirmation(br)
+    return external_id, device_price, monthly_payment, full_price
+###########################################################################
+
+@allure.description("Оформление покупки смартфона в рассрочку на 24 месяца")
+@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 24 месяца, переход в корзину и оформление покупки")
+def buyTANaSim24(br, test_dude):
+    select_brand(br)
+    select_product(br)
+    select_type_of_sale_rassrochka_24(br)
+    view_and_select_rate_plan(br)
+    go_to_cart(br)
+    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
+    personal_data_view(br)
+    select_delivery_method(br, test_dude)
+    select_payment_method(br)
+    check_order_details(br)
+    external_id = order_confirmation(br)
+    return external_id, device_price, monthly_payment, full_price
+
+
+###########################################################################
+
+@allure.description("Оформление покупки смартфона в рассрочку на 11 месяцев")
+@allure.step("Выбор оборудования, выбор типа продажи в рассрочку на 11 месяцев, переход в корзину и оформление покупки")
+def buyTANaSimEleven(br, test_dude):
+    select_brand(br)
+    select_product(br)
+    select_type_of_sale_rassrochka_11(br)
+    view_and_select_rate_plan(br)
+    go_to_cart(br)
+    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
+    personal_data_view(br)
+    select_delivery_method(br, test_dude)
+    select_payment_method(br)
+    check_order_details(br)
+    external_id = order_confirmation(br)
+    return external_id, device_price, monthly_payment, full_price
+
+
+@allure.description("Поиск и открытие созданной заявки для сравнения данных и закрытия заявки")
+@allure.step("Анализ данных заявки, сравнение данных и закрытие заявки")
+def check_wso_installment(br, test_dude, external_id, device_price, monthly_payment, full_price):
+    select_menu_internet_shop(br)
+    order_external_id = find_order(br, external_id)
+    view_search_results(br, test_dude, order_external_id)
+    view_order_details(br)
+    check_order_id(br, order_external_id)
+    check_fio(br, test_dude)
+    check_adress(br, test_dude)
+    check_prices(br, device_price, monthly_payment, full_price)
+    change_status_for_rejected(br)
+    change_status_for_closed(br)
+
+
+####################################################################33
 
 @allure.description("Оформление покупки оборудования вместе с Каско")
 @allure.step("Оформление покупки оборудования вместе с Каско")
@@ -1370,6 +1347,27 @@ def check_wso_kasko_full(br, test_dude, external_id, device_price, phone_monthly
     check_full_prices_with_kasko(br, device_price, phone_monthly_payment, phone_full_price, kasko_full_price)
     change_status_for_rejected(br)
     change_status_for_closed(br)
+
+
+##############################################################################
+@allure.description("Оформление покупки аксессуара")
+@allure.step("Оформление покупки аксессуара")
+def buy_accessory(br, test_dude):
+    go_to_accessory(br)
+    select_brand_for_accessory(br)
+    select_product(br)
+    check_accessory_page(br)
+    select_accessory(br)
+    step_2(br)
+    check_cart_with_accessory(br)
+    personal_data_window(br)
+    select_delivery_method(br, test_dude)
+    select_payment_method_for_order(br)
+    device_price, monthly_payment, full_price = order_list(br)
+    select_payment_method(br)
+    external_id = order_confirmation(br)
+    return external_id, device_price, monthly_payment, full_price
+
 ############################################################################
 @allure.description("Оформление покупки оборудования с Каско в рассрочку")
 @allure.step("Оформление покупки оборудования с Каско в рассрочку")
@@ -1470,7 +1468,7 @@ def check_wso_full_price_device(br, test_dude, external_id, device_price):
 ##############################################################################
 @allure.description("Покупка оборудования в рассрочку новым клиентом")
 @allure.step("Покупка оборудования в рассрочку новым клиентом")
-def buy_ta_s_novoy_sim(br, test_dude)
+def buy_ta_s_novoy_sim(br, test_dude):
     select_brand_with_kasko(br)
     select_product(br)
     select_installment_for_new_customer(br)
