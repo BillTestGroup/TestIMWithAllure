@@ -193,12 +193,12 @@ def select_brand_with_kasko(br):
 @allure.step("Выбор бренда оборудования для покупки")
 def select_brand_for_legal(br):
     br.find_element_by_xpath("//a[text()[contains(.,'Бренд')]]/../following-sibling::div//button").click()
-    time.sleep(3)
+    time.sleep(5)
     brand_list = br.find_elements_by_xpath(
         "//a[text()[contains(.,'Бренд')]]/../following-sibling::div//span[@class= 'field-checkbox__visual']")
     brand_num = randrange(len(brand_list))
     brand_list[brand_num].click()
-    time.sleep(3)
+    time.sleep(5)
     try:
         if br.find_elements_by_xpath("//span[text()[contains(.,'Перейти к покупке')]]"):
             pass
