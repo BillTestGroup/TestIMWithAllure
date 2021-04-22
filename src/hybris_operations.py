@@ -129,7 +129,7 @@ def check_cart_legal(br):
     br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
     WebDriverWait(br, 60).until(
         EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Корзина')]]/..")))
-    time.sleep(5)
+    time.sleep(6)
     try:
         cut_pop_up(br)
         if br.find_element_by_xpath(
