@@ -774,9 +774,9 @@ def personal_data_window(br):
 
 @allure.step("Переход на окно 'Способ оплаты', выбор способа оплаты")
 def select_payment_method_for_order(br):
-    time.sleep(6)
+    time.sleep(5)
     payment_method = ""
-    time.sleep(6)
+    time.sleep(5)
     try:
         payment_method = br.find_element_by_xpath("//h2[text()[contains(.,'Способ оплаты')]]")
     except:
@@ -788,8 +788,14 @@ def select_payment_method_for_order(br):
                 (By.XPATH, "//span[text()[contains(.,'Банковской картой при получении')]]"))).click()
         cut_pop_up(br)
         br.find_element_by_xpath("//span[text()[contains(.,'Далее')]]/..").click()
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Состав заказа')]]")))
+        cut_pop_up(br)
+        br.find_element_by_xpath(
+            "//span[text()[contains(.,'Личные данные могут быть использованы для дополнительной проверки.')]]/..").click()
+
+        br.find_element_by_xpath("//span[text()[contains(.,'Подтвердить')]]/..").click()
     else:
-        time.sleep(3)
         pass
 
 @allure.step("Переход на окно 'Состав заказа'")
@@ -1362,9 +1368,9 @@ def buy_accessory(br, test_dude):
     check_cart_with_accessory(br)
     personal_data_window(br)
     select_delivery_method(br, test_dude)
-    select_payment_method_for_order(br)
-    device_price, monthly_payment, full_price = order_list(br)
     select_payment_method(br)
+    device_price, monthly_payment, full_price = order_list(br)
+    select_payment_method_for_order(br)
     external_id = order_confirmation(br)
     return external_id, device_price, monthly_payment, full_price
 
