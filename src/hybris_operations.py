@@ -219,6 +219,7 @@ def select_product(br):
     WebDriverWait(br, 30).until(EC.visibility_of(product_list[prod_num]))
     time.sleep(3)
     cut_pop_up(br)
+    br.find_element_by_tag_name('body').send_keys(u'\ue00e')
     product_list[prod_num].click()
 
 
