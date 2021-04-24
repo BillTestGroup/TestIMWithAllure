@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -179,8 +179,8 @@ def select_brand(br):
     time.sleep(3)
     cut_pop_up(br)
 
-@allure.step("Выбор бренда оборудования для покупки совместо с Каско")
-def select_brand_with_kasko(br):
+@allure.step("Выбор бренда оборудования для покупки")
+def select_brand_(br):
     cut_pop_up(br)
     brand_pannel = br.find_element_by_id("facet-collapse-brand")
     brand_pannel.find_element_by_xpath("//div[@id='facet-collapse-brand']/div[1]/div/div/div[2]/button").click()
@@ -223,20 +223,27 @@ def select_product(br):
     product_list[prod_num].click()
 
 
-@allure.step("Выбор модели оборудования для покупки совместо с Каско")
-def select_model_for_new_sim(br):
+@allure.step("Выбор модели оборудования")
+def select_product_for_new_sim(br):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//*[@id='facet-collapse-category']/div/div/div/div[2]/button")))
     br.find_element_by_xpath("//*[@id='facet-collapse-category']/div/div/div/div[2]/button").click()
     WebDriverWait(br, 30).until(EC.visibility_of_element_located(
         (By.XPATH, "//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul")))
-    product_list = br.find_elements_by_xpath(
-        "//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li")
+    product_list = br.find_elements_by_xpath("//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li")
+    iteration_check = 0
     prod_num = randrange(len(product_list))
-    WebDriverWait(br, 30).until(EC.element_to_be_clickable(
-        (By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
-    # product_list[prod_num].click()
-    product_list[5].click()
+    WebDriverWait(br, 30).until(EC.element_to_be_clickable((By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
+    product_name = br.find_element_by_xpath(f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]/a/span").text
+    while product_name == "Тарифы «Привет»":
+        prod_num = randrange(len(product_list))
+        WebDriverWait(br, 30).until(EC.element_to_be_clickable(
+            (By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
+        product_name = br.find_element_by_xpath(
+            f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]/a/span").text
+        iteration_check += 1
+    else:
+        product_list[prod_num].click()
 
 
 @allure.step("Выбор модели оборудования для покупки")
@@ -374,9 +381,10 @@ def select_rate_plan_for_new_sim(br):
 # - вырбрать рандомный тариф из выбранной категории
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//button/span[text()[contains(.,'Подробнее')]]/..")))
+    cut_pop_up(br)
     tarif_list = br.find_elements_by_xpath("//button/span[text()[contains(.,'Подробнее')]]/..")
     prod_num = randrange(len(tarif_list))
-    cut_pop_up(br)
+
     tarif_list[prod_num].click()
     # - тыкнуть подключиться
     cut_pop_up(br)
@@ -1541,7 +1549,7 @@ def check_wso_installment(br, test_dude, external_id, device_price, monthly_paym
 @allure.description("Оформление покупки оборудования вместе с Каско")
 @allure.step("Оформление покупки оборудования вместе с Каско")
 def buy_device_with_kasko(br, test_dude):
-    select_brand_with_kasko(br)
+    select_brand_(br)
     select_product(br)
     select_type_of_sale_for_kasko(br)
     view_and_select_rate_plan(br)
@@ -1595,7 +1603,7 @@ def buy_accessory(br, test_dude):
 @allure.description("Оформление покупки оборудования с Каско в рассрочку")
 @allure.step("Оформление покупки оборудования с Каско в рассрочку")
 def buy_device_with_kasko_installment(br, test_dude):
-    select_brand_with_kasko(br)
+    select_brand_(br)
     select_product(br)
     select_type_of_sale_for_kasko_installment(br)
     view_and_select_rate_plan(br)
@@ -1629,7 +1637,7 @@ def check_wso_kasko_installment(br, test_dude, external_id, device_price, phone_
 @allure.description("Покупка новой сим с подключением и оборудованием")
 @allure.step("Покупка новой сим с подключением и оборудованием")
 def buy_new_sim(br, test_dude):
-    select_model_for_new_sim(br)
+    select_product_for_new_sim(br)
     select_rate_plan_for_new_sim(br)
     rate_plan, product_price = take_data_from_cart(br)
     personal_data_window(br)
@@ -1698,7 +1706,7 @@ def check_wso_full_price_device(br, test_dude, external_id, device_price):
 @allure.description("Покупка оборудования в рассрочку новым клиентом")
 @allure.step("Покупка оборудования в рассрочку новым клиентом")
 def buy_ta_s_novoy_sim(br, test_dude):
-    select_brand_with_kasko(br)
+    select_brand_(br)
     select_product(br)
     select_installment_for_new_customer(br)
     select_rate_plan_for_new_customer(br)
