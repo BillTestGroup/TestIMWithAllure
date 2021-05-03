@@ -118,12 +118,12 @@ def check_cart(br):
 
 @allure.step("Очистка корзины от оставленного в ней оборудования")
 def check_cart_legal(br):
-    WebDriverWait(br, 60).until(
-        EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
-    cut_pop_up(br)
-    br.find_element_by_xpath("//*[text()[contains(.,'Продолжить как юридическое лицо')]]").click()
-    WebDriverWait(br, 60).until(
-        EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
+    # WebDriverWait(br, 60).until(
+    #     EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
+    # cut_pop_up(br)
+    # br.find_element_by_xpath("//*[text()[contains(.,'Продолжить как юридическое лицо')]]").click()
+    # WebDriverWait(br, 60).until(
+    #     EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
     WebDriverWait(br, 60).until(
         EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'basket-small__widget')]")))
     br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
@@ -162,7 +162,7 @@ def check_cart_legal(br):
 @allure.step("Переход на вкладку телефоны")
 def go_to_phones_tab(br):
     cut_pop_up(br)
-    br.find_element_by_xpath("//*[@class='filter__tab-list-item']//a[text()[contains(.,'Телефоны')]]/..").click()
+    br.find_element_by_xpath("//*[@class='filter__top-links fcc']//a[text()[contains(.,'Телефоны')]]/..").click()
     cut_pop_up(br)
     WebDriverWait(br, 60).until(
         EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Телефоны')]]")))
@@ -369,11 +369,18 @@ def type_unp(br, test_dude):
         "//button[contains(@class, 'btn btn--md btn--center btn--primary form-unp__submit')]").click()
 
 
-@allure.step("Нажать 'Продолжить'")
-def press_continue(br):
-    WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//h4[text()[contains(.,'Товар добавлен в корзину')]]")))
-    br.find_element_by_xpath("/html/body/div[1]/div/div/div[1]/div/div[2]/div/div[2]/a").click()
+# @allure.step("Нажать 'Продолжить'")
+# def press_continue(br):
+#     cut_pop_up(br)
+#     WebDriverWait(br, 60).until(
+#         EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'basket-small__widget')]")))
+#     br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
+#     WebDriverWait(br, 60).until(
+#         EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Корзина')]]")))
+#
+#     WebDriverWait(br, 30).until(
+#         EC.visibility_of_element_located((By.XPATH, "//h4[text()[contains(.,'Товар добавлен в корзину')]]")))
+#     br.find_element_by_xpath("/html/body/div[1]/div/div/div[1]/div/div[2]/div/div[2]/a").click()
 
 
 @allure.step("Выбор тарифного плана для подключения")
@@ -438,7 +445,12 @@ def go_to_cart(br):
 @allure.step("Переход в корзину")
 def move_to_cart(br):
 # Корзина
-    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH,"//h1[text()[contains(.,'Корзина')]]")))
+    cut_pop_up(br)
+    WebDriverWait(br, 60).until(
+        EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'basket-small__widget')]")))
+    br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Корзина')]]")))
     cut_pop_up(br)
     device_price = float(
         str(br.find_element_by_xpath("//*[text()[contains(.,'Итого к оплате (первым взносом):')]]/following-sibling::div/*[text()!=' руб']").text).replace(
@@ -1747,7 +1759,6 @@ def buy_for_legal(br, test_dude):
     select_product_for_legal(br)
     select_type_of_sale_with_discount(br)
     type_unp(br, test_dude)
-    press_continue(br)
     device_price = move_to_cart(br)
     input_data_for_legal_customer(br, test_dude)
     press_confirm(br)

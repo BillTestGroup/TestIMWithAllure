@@ -1,6 +1,7 @@
 import time
 import pytest
 from src import hybris_operations as HB, ma_dudes as dudes
+import allure
 
 test_dude = dudes.Private_dude
 vix_creds = dudes.VIX_credentials
@@ -17,7 +18,7 @@ def br():
     br.save_screenshot("./screenshots/"+(str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
     br.quit()
 
-
+@allure.title("Покупка оборудования по полной стоимости")
 def test_Pokupka_TA_bez_sim_i_skidki(br):
     HB.login_site(br, login, passw)
     HB.check_cart(br)

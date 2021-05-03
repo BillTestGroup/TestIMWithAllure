@@ -1,6 +1,7 @@
 import time
 import pytest
 from src import hybris_operations as HB, ma_dudes as dudes
+import allure
 
 test_dude = dudes.Private_dude
 vix_creds = dudes.VIX_credentials
@@ -19,6 +20,7 @@ def br():
 
 
 # IM_KASKO
+@allure.title("Оформление покупки оборудования вместе с Каско")
 def test_IM_KASKO(br):
     HB.login_site(br, login, passw)
     HB.check_cart(br)
