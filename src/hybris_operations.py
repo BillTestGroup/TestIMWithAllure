@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -196,8 +196,21 @@ def select_brand_for_legal(br):
     time.sleep(5)
     brand_list = br.find_elements_by_xpath(
         "//a[text()[contains(.,'Бренд')]]/../following-sibling::div//span[@class= 'field-checkbox__visual']")
+    iteration_check = 0
     brand_num = randrange(len(brand_list))
-    brand_list[brand_num].click()
+    WebDriverWait(br, 30).until(EC.element_to_be_clickable(
+        (By.XPATH, f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__visual']")))
+    brand_name = br.find_element_by_xpath(
+        f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__text'][{brand_num + 1}]").text
+    while brand_name == "Nokia":
+        brand_num = randrange(len(brand_list))
+        WebDriverWait(br, 30).until(EC.element_to_be_clickable(
+        (By.XPATH, f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__visual']")))
+        brand_name = br.find_element_by_xpath(f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__text'][{brand_num + 1}]").text
+        iteration_check += 1
+    else:
+        brand_list[brand_num].click()
+
     time.sleep(5)
     try:
         if br.find_elements_by_xpath("//span[text()[contains(.,'Перейти к покупке')]]"):
@@ -331,9 +344,10 @@ def select_installment_for_new_customer(br):
         "//*[@id='NEW_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
     combobox.click()
     ac = ActionChains(br)
-    ac.move_to_element(br.find_element_by_xpath("//li/div[text()[contains(., '6 мес по ')]]/..")).perform()
+    ac.move_to_element(br.find_element_by_xpath("//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'С обслуживанием не менее 12')]]/..")).perform()
+    time.sleep(3)
     WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//li/div[text()[contains(., '6 мес по ')]]/.."))).click()
+        EC.visibility_of_element_located((By.XPATH, "//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'С обслуживанием не менее 12')]]/.."))).click()
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH,
                                     "//*[@id='NEW_CONTRACT']//*[@class='live-filter-content-item active']//*[@class='price-block-button']"))).click()
