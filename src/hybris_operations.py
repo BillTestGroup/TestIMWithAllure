@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -118,12 +118,12 @@ def check_cart(br):
 
 @allure.step("Очистка корзины от оставленного в ней оборудования")
 def check_cart_legal(br):
-    # WebDriverWait(br, 60).until(
-    #     EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
-    # cut_pop_up(br)
-    # br.find_element_by_xpath("//*[text()[contains(.,'Продолжить как юридическое лицо')]]").click()
-    # WebDriverWait(br, 60).until(
-    #     EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
+    cut_pop_up(br)
+    br.find_element_by_xpath("//*[text()[contains(.,'Продолжить как юридическое лицо')]]").click()
+    WebDriverWait(br, 60).until(
+        EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Продолжить как юридическое лицо')]]")))
     WebDriverWait(br, 60).until(
         EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'basket-small__widget')]")))
     br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
@@ -219,11 +219,12 @@ def select_product(br):
     WebDriverWait(br, 30).until(EC.visibility_of(product_list[prod_num]))
     time.sleep(3)
     cut_pop_up(br)
-    br.find_element_by_tag_name('body').send_keys(u'\ue00e')
+    br.execute_script("arguments[0].scrollIntoView(true);", product_list[prod_num])
+    #br.find_element_by_tag_name('body').send_keys(u'\ue00e')
     product_list[prod_num].click()
 
 
-@allure.step("Выбор модели оборудования")
+@allure.step("Выбор группы тарифных планов для подключения")
 def select_product_for_new_sim(br):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//*[@id='facet-collapse-category']/div/div/div/div[2]/button")))
