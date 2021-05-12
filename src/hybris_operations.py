@@ -192,6 +192,7 @@ def select_brand_(br):
 
 @allure.step("Выбор бренда оборудования для покупки")
 def select_brand_for_legal(br):
+    cut_pop_up(br)
     br.find_element_by_xpath("//a[text()[contains(.,'Бренд')]]/../following-sibling::div//button").click()
     time.sleep(5)
     brand_list = br.find_elements_by_xpath(
