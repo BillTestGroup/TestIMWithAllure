@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -201,12 +201,12 @@ def select_brand_for_legal(br):
     WebDriverWait(br, 30).until(EC.element_to_be_clickable(
         (By.XPATH, f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__visual']")))
     brand_name = br.find_element_by_xpath(
-        f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__text'][{brand_num + 1}]").text
+        f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__text']").text
     while brand_name == "Nokia":
         brand_num = randrange(len(brand_list))
         WebDriverWait(br, 30).until(EC.element_to_be_clickable(
         (By.XPATH, f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__visual']")))
-        brand_name = br.find_element_by_xpath(f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__text'][{brand_num + 1}]").text
+        brand_name = br.find_element_by_xpath(f"//a[text()[contains(.,'Бренд')]]/../following-sibling::div//div[@class= 'field-check-list__item flc'][{brand_num + 1}]//span[@class= 'field-checkbox__text']").text
         iteration_check += 1
     else:
         brand_list[brand_num].click()
@@ -462,8 +462,11 @@ def move_to_cart(br):
 # Корзина
     cut_pop_up(br)
     WebDriverWait(br, 60).until(
-        EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'basket-small__widget')]")))
-    br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
+        EC.element_to_be_clickable((By.XPATH, "//div[@class= 'modal-window__body'][1]//a[text()[contains(.,'Перейти в корзину')]]/..")))
+    br.find_element_by_xpath("//div[@class= 'modal-window__body'][1]//a[text()[contains(.,'Перейти в корзину')]]/..").click()
+    # WebDriverWait(br, 60).until(
+    #     EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'basket-small__widget')]")))
+    # br.find_element_by_xpath("//a[contains(@class, 'basket-small__widget')]").click()
     WebDriverWait(br, 60).until(
         EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Корзина')]]")))
     cut_pop_up(br)
