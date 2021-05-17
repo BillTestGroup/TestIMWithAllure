@@ -34,6 +34,6 @@ def br():
 def test_buy_TA_legal(br):
     HB.check_cart_legal(br)
     device_price, external_id = HB.buy_for_legal(br, test_dude)
-    time.sleep(60)
+    time.sleep(100)
     HB.log_in_wso(br, wso, vix_creds)
     HB.check_wso_legal(br, test_dude, device_price, external_id)
