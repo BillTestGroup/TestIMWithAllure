@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -310,7 +310,7 @@ def select_type_of_sale_rassrochka_24(br):
     combobox = br.find_element_by_xpath(
         "//*[@id='CURRENT_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
     combobox.click()
-    time.sleep(1)
+    time.sleep(2)
     br.find_element_by_xpath(
         "//li/div[text()[contains(., '24 мес по ')]]/following-sibling::div[text()[contains(.,'С обслуживанием не менее 12')]]/..").click()
     WebDriverWait(br, 30).until(
@@ -381,6 +381,7 @@ def type_unp(br, test_dude):
                                           "//div[text()[contains(.,'Для добавления товара в корзину необходимо ввести УНП Вашей организации.')]]")))
     # br.find_element_by_xpath("//input[contains(@placeholder, 'Введите УНП')]").click()
     br.find_element_by_xpath("//input[contains(@placeholder, 'Введите УНП')]").send_keys(test_dude.TRN)
+
     br.find_element_by_xpath(
         "//button[contains(@class, 'btn btn--md btn--center btn--primary form-unp__submit')]").click()
 
