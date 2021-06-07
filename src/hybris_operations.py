@@ -345,10 +345,10 @@ def select_installment_for_new_customer(br):
         "//*[@id='NEW_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
     combobox.click()
     ac = ActionChains(br)
-    ac.move_to_element(br.find_element_by_xpath("//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'С обслуживанием не менее 12')]]/..")).perform()
+    ac.move_to_element(br.find_element_by_xpath("//*[@id='NEW_CONTRACT']//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'от Стартовый')]]/..")).perform()
     time.sleep(3)
     WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'С обслуживанием не менее 12')]]/.."))).click()
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='NEW_CONTRACT']//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'от Стартовый')]]/.."))).click()
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH,
                                     "//*[@id='NEW_CONTRACT']//*[@class='live-filter-content-item active']//*[@class='price-block-button']"))).click()
