@@ -27,11 +27,12 @@ def cut_pop_up(br):
            """)
 
 
+
 @allure.step("Открытие стариницы интернет-магазина А1")
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
