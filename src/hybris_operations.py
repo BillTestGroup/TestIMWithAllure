@@ -31,7 +31,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -482,21 +482,20 @@ def move_to_cart(br):
 
 @allure.step("Получение значения цены из корзины")
 def take_price_values_for_equipment(br):
-    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']")))
+    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='form review-item-table-price']")))
     cut_pop_up(br)
-    br.find_element_by_xpath("//button[@class='button button--tertiary with-icon collapsed']").click()
     time.sleep(2)
     monthly_payment = float(
         str(br.find_element_by_xpath(
-            "//p[text()[contains(.,'Регулярный платеж')]]/following-sibling::p//span[@class='price-value ']").text).replace(
+            "//p[text()[contains(.,'Регулярный платеж')]]/following-sibling::*//span[@class='price-value-card']").text).replace(
             " ", "").replace(",", "."))
     full_price = float(
         str(br.find_element_by_xpath(
-            "//p[text()[contains(.,'Итоговая стоимость')]]/following-sibling::p//span[@class='price-value ']").text).replace(
+            "//p[text()[contains(.,'Итоговая стоимость')]]/following-sibling::*//span[@class='price-value-card']").text).replace(
             " ", "").replace(",", "."))
     device_price = float(
         str(br.find_element_by_xpath(
-            "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']").text).replace(
+            "//span[text()[contains(.,'Сейчас к оплате')]]/following-sibling::*//span[@class='price-value-card']").text).replace(
             " ", "").replace(",", "."))
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Купить')]]/.."))).click()
@@ -507,16 +506,15 @@ def take_price_values_for_equipment(br):
 @allure.step("Получение значения цены из корзины")
 def take_full_price_value_for_equipment(br):
     WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH,
-                                                                  "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']")))
+                                                                  "//*[@class='form review-item-table-price']")))
     cut_pop_up(br)
     device_price = float(
         str(br.find_element_by_xpath(
-            "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']").text).replace(
+            "//span[text()[contains(.,'Сейчас к оплате')]]/following-sibling::*//span[@class='price-value-card']").text).replace(
             " ", "").replace(",", "."))
     # НАЖИМАЕМ КУПИТЬ
     WebDriverWait(br, 30).until(
-        EC.element_to_be_clickable((By.XPATH,
-                                    "//*[@class='form review-item-table-price']//*[@class='form-cta']//span[text()[contains(.,'Купить')]]/.."))).click()
+        EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Купить')]]/.."))).click()
     cut_pop_up(br)
     return device_price
 
@@ -618,24 +616,22 @@ def press_confirm(br):
 def take_data_from_cart(br):
     # Окно Корзина
     WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH,
-                                                                  "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']")))
+                                                                  "//*[@class='form review-item-table-price']/..")))
     cut_pop_up(br)
-    br.find_element_by_xpath("//button[@class='button button--tertiary with-icon collapsed']").click()
     time.sleep(2)
-    assert br.find_element_by_xpath(
-        "//div[@id='bundle-collapse-block-0']/div[2]/div[@class='review-item-main']/div[@class='review-item-main-info']/p").text == "SIM-карта"
-    assert br.find_element_by_xpath(
-        "//div[@id='bundle-collapse-block-0']/div[2]/div[@class='review-item-main']/div[@class='review-item-main-info']/a/span[@class='link-label']").text == "Universal"
-    rate_plan = br.find_element_by_xpath("//div[@id='bundle-collapse-block-0']/div[1]/div/div[2]/a/span").text
+    # assert br.find_element_by_xpath(
+    #     "//div[@id='bundle-collapse-block-0']/div[2]/div[@class='review-item-main']/div[@class='review-item-main-info']/p").text == "SIM-карта"
+    # assert br.find_element_by_xpath(
+    #     "//div[@id='bundle-collapse-block-0']/div[2]/div[@class='review-item-main-card review-item-main-unrooted-card']/div[@class='review-item-main-info-card']/a/span[@class='link-label']").text == "Universal"
 
+    rate_plan = br.find_element_by_xpath("//div[@id='bundle-collapse-block-0']/div[1]/div/div/a/span").text
     product_price = float(
         str(br.find_element_by_xpath(
-            "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']").text).replace(
+            "//span[text()[contains(.,'Сейчас к оплате')]]/following-sibling::*//span[@class='price-value-card']").text).replace(
             " ", "").replace(",", "."))
     # НАЖИМАЕМ КУПИТЬ
     WebDriverWait(br, 30).until(
-        EC.element_to_be_clickable((By.XPATH,
-                                    "//*[@class='form review-item-table-price']//*[@class='form-cta']//span[text()[contains(.,'Купить')]]/.."))).click()
+        EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Купить')]]/.."))).click()
     cut_pop_up(br)
     return rate_plan, product_price
 
@@ -721,6 +717,10 @@ def fill_in_full_personal_data(br, test_dude):
     # email
     br.find_element_by_xpath("//*[@id='i-email-input']").click()
     br.find_element_by_xpath("//*[@id='i-email-input']").send_keys(test_dude.email)
+    #контактный номер
+    br.find_element_by_xpath("//input[@name='contactPhone']").click()
+    br.find_element_by_xpath("//input[@name='contactPhone']").send_keys(test_dude.contact_phone)
+
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Далее')]]/.."))).click()
     WebDriverWait(br, 30).until(EC.invisibility_of_element((By.XPATH, "//*[text()[contains(.,' Личные данные')]]/..")))
@@ -739,7 +739,7 @@ def select_delivery_method(br, test_dude):
         pass
     if (delivery_method):
         cut_pop_up(br)
-        br.find_element_by_xpath("//*[text()[contains(.,'Доставка курьером')]]").click()
+        br.find_element_by_xpath("//*[text()[contains(.,'Курьером')]]").click()
         WebDriverWait(br, 30).until(
             EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Данные о доставке')]]")))
         assert br.find_element_by_xpath("//*[text()[contains(.,'Адрес')]]/following::*").text == test_dude.adres
@@ -762,7 +762,7 @@ def select_delivery_method_for_new_customer(br, test_dude):
         pass
     if (delivery_method):
         cut_pop_up(br)
-        br.find_element_by_xpath("//*[text()[contains(.,'Доставка курьером')]]").click()
+        br.find_element_by_xpath("//*[text()[contains(.,'Курьером')]]").click()
         WebDriverWait(br, 30).until(
             EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,' Создать новый адрес')]]")))
         br.find_element_by_xpath("//*[text()[contains(.,' Создать новый адрес')]]").click()
@@ -1157,17 +1157,16 @@ def add_kasko_installment_to_order(br):
 
 @allure.step("Корзина")
 def take_device_price_from_cart(br):
-    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH,
-                                                                  "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']")))
+    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='form review-item-table-price']")))
     cut_pop_up(br)
     device_price = float(
         str(br.find_element_by_xpath(
-            "//*[@class='col-sm-12']// *[@ class ='description-list description-list--review review-item-table-dl']//span[@class='price ']/span[@class='price-value ']").text).replace(
+            "//span[text()[contains(.,'Сейчас к оплате')]]/following-sibling::*//span[@class='price-value-card']").text).replace(
             " ", "").replace(",", "."))
     # НАЖИМАЕМ КУПИТЬ
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH,
-                                    "//*[@class='form review-item-table-price']//*[@class='form-cta']//span[text()[contains(.,'Купить')]]/.."))).click()
+                                    "//span[text()[contains(.,'Купить')]]/.."))).click()
     cut_pop_up(br)
     return device_price
 

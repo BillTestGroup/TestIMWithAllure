@@ -20,6 +20,7 @@ street = test_dude.street
 house = test_dude.house
 building = test_dude.building
 appartment = test_dude.appartment
+contact_phone = test_dude.contact_phone
 
 
 #fixture
