@@ -698,10 +698,10 @@ def fill_in_full_personal_data(br, test_dude):
     time.sleep(1)
     # дом
     br.find_element_by_xpath("//label[@for='i-house_2']").click()
-    time.sleep(1)
+    time.sleep(2)
     br.find_element_by_xpath("//span[text()[contains(.,'Дом')]]/../following-sibling::span//input").send_keys(
         test_dude.house)
-    time.sleep(1)
+    time.sleep(3)
     br.find_element_by_xpath("//*[@id='select2-i-house_2-results']/li").click()
     time.sleep(1)
     # корпус
