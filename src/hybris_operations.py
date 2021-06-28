@@ -1487,7 +1487,7 @@ def change_status_for_rejected(br):
         "test test")
     br.find_element_by_xpath(
         "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
-    WebDriverWait(br, 70).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
+    WebDriverWait(br, 80).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
     assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
 
 @allure.step("Смена статуса заявки на 'Завершена/Отказ ИМ'")
@@ -1502,7 +1502,7 @@ def change_status_for_closed(br):
         "test test")
     br.find_element_by_xpath(
         "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
-    WebDriverWait(br, 70).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
+    WebDriverWait(br, 80).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
     assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
     assert br.find_element_by_xpath(
         "//div[@id='hybrisOrderDetailForm:rootOrderDetailPanel_header']/span").text == "Текущий статус - Завершена/Отказ ИМ"
