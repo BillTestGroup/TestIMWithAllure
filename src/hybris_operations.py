@@ -1477,30 +1477,30 @@ def check_full_price(br, device_price):
 def change_status_for_rejected(br):
     br.find_element_by_xpath("//*[text()[contains(.,'Сменить статус')]]/..").click()
     br.find_element_by_xpath("//span[text()[contains(.,'Отклонена ИМ')]]/../..").click()
-    WebDriverWait(br, 60).until(
+    WebDriverWait(br, 70).until(
         EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:confirmChangeStatusDialog")))
     br.find_element_by_id("hybrisOrderDetailForm:confirmChangeStatus").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
+    WebDriverWait(br, 70).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
     br.find_element_by_xpath("//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]").send_keys(
         "test test")
     br.find_element_by_xpath(
         "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
+    WebDriverWait(br, 70).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
     assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
 
 @allure.step("Смена статуса заявки на 'Завершена/Отказ ИМ'")
 def change_status_for_closed(br):
     br.find_element_by_xpath("//*[text()[contains(.,'Сменить статус')]]/..").click()
     br.find_element_by_xpath("//span[text()[contains(.,'Завершена/Отказ ИМ')]]/../..").click()
-    WebDriverWait(br, 60).until(
+    WebDriverWait(br, 70).until(
         EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:confirmChangeStatusDialog")))
     br.find_element_by_id("hybrisOrderDetailForm:confirmChangeStatus").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
+    WebDriverWait(br, 70).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:addCommentDialog")))
     br.find_element_by_xpath("//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]").send_keys(
         "test test")
     br.find_element_by_xpath(
         "//textarea[contains(@data-p-rmsg, 'Комментарий не должен быть пустым!')]/../../following::div[1]/button/span[text()[contains(.,'Сохранить')]]/..").click()
-    WebDriverWait(br, 60).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
+    WebDriverWait(br, 70).until(EC.visibility_of_element_located((By.ID, "hybrisOrderDetailForm:messages")))
     assert br.find_element_by_id("hybrisOrderDetailForm:messages").text == "Статус заявки успешно изменен"
     assert br.find_element_by_xpath(
         "//div[@id='hybrisOrderDetailForm:rootOrderDetailPanel_header']/span").text == "Текущий статус - Завершена/Отказ ИМ"
@@ -1573,6 +1573,7 @@ def check_wso_installment(br, test_dude, external_id, device_price, monthly_paym
     check_adres(br, test_dude)
     check_prices(br, device_price, monthly_payment, full_price)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
 
 
@@ -1696,7 +1697,7 @@ def check_wso_new_sim(br, test_dude, external_id, rate_plan, product_price):
     check_adres(br, test_dude)
     check_prices_new_sim(br, product_price, rate_plan)
     change_status_for_rejected(br)
-    time.sleep(4)
+    time.sleep(5)
     change_status_for_closed(br)
 
 ###########################################################

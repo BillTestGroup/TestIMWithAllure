@@ -25,7 +25,7 @@ def test_buyTANaSimEleven(br):
     HB.cut_pop_up(br)
     external_id, device_price, monthly_payment, full_price = HB.buyTANaSimEleven(br, test_dude)
     HB.wait_for_order_in_work(br)
-    time.sleep(20)
+    time.sleep(30)
     HB.log_in_wso(br, wso, vix_creds)
     HB.check_wso_installment(br, test_dude, external_id, device_price, monthly_payment, full_price)
 

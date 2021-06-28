@@ -28,6 +28,6 @@ def test_IM_New_SIM(br):
     HB.cut_pop_up(br)
     external_id, rate_plan, product_price = HB.buy_new_sim(br, test_dude)
     HB.wait_for_order_in_work(br)
-    time.sleep(20)
+    time.sleep(30)
     HB.log_in_wso(br, wso, vix_creds)
     HB.check_wso_new_sim(br, test_dude, external_id, rate_plan, product_price)
