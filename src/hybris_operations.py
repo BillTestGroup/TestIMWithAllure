@@ -251,15 +251,17 @@ def select_product_for_new_sim(br):
     prod_num = randrange(len(product_list))
     WebDriverWait(br, 30).until(EC.element_to_be_clickable((By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
     product_name = br.find_element_by_xpath(f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]/a/span").text
-    while product_name == "Тарифы «Привет»":
-        prod_num = randrange(len(product_list))
-        WebDriverWait(br, 30).until(EC.element_to_be_clickable(
-            (By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
-        product_name = br.find_element_by_xpath(
-            f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]/a/span").text
-        iteration_check += 1
-    else:
-        product_list[prod_num].click()
+    while product_name == "Тарифы «Привет»" or product_name == "Тарифы для детей и молодёжи":
+        try:
+            prod_num = randrange(len(product_list))
+            WebDriverWait(br, 30).until(EC.element_to_be_clickable(
+                (By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
+            product_name = br.find_element_by_xpath(
+                f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]/a/span").text
+            iteration_check += 1
+        except:
+            pass
+    product_list[prod_num].click()
 
 
 @allure.step("Выбор модели оборудования для покупки")
