@@ -1609,6 +1609,7 @@ def check_wso_kasko_full(br, test_dude, external_id, device_price, phone_monthly
     check_adres(br, test_dude)
     check_full_prices_with_kasko(br, device_price, phone_monthly_payment, phone_full_price, kasko_full_price)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
 
 
@@ -1663,6 +1664,7 @@ def check_wso_kasko_installment(br, test_dude, external_id, device_price, phone_
     check_adres(br, test_dude)
     check_prices_with_kasko_installment(br, device_price, phone_monthly_payment, phone_full_price, kasko_monthly_payment, kasko_full_price)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
 
 ###########################################################################
@@ -1694,6 +1696,7 @@ def check_wso_new_sim(br, test_dude, external_id, rate_plan, product_price):
     check_adres(br, test_dude)
     check_prices_new_sim(br, product_price, rate_plan)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
 
 ###########################################################
@@ -1732,6 +1735,7 @@ def check_wso_full_price_device(br, test_dude, external_id, device_price):
     check_adres(br, test_dude)
     check_full_price(br, device_price)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
 
 ##############################################################################
@@ -1767,6 +1771,7 @@ def check_wso_installment_for_new(br, test_dude, device_price, monthly_payment, 
     check_adres(br, test_dude)
     check_prices_for_new_customer(br, device_price, monthly_payment, full_price)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
 
 
@@ -1796,4 +1801,5 @@ def check_wso_legal(br, test_dude, device_price, external_id):
     check_adres(br, test_dude)
     check_full_price(br, device_price)
     change_status_for_rejected(br)
+    time.sleep(4)
     change_status_for_closed(br)
