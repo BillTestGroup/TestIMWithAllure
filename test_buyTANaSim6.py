@@ -14,6 +14,7 @@ def br():
     site = 'https://www.a1.by/ru/'
     br = HB.open_browser(site)
     yield br
+    print(f"\nSCREENSHOT: " + (str(time.strftime('%Y-%m-%d-%H-%M'))))
     br.save_screenshot("./screenshots/"+(str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
     br.quit()
 
