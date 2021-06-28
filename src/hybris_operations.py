@@ -1575,7 +1575,7 @@ def check_wso_installment(br, test_dude, external_id, device_price, monthly_paym
     check_adres(br, test_dude)
     check_prices(br, device_price, monthly_payment, full_price)
     change_status_for_rejected(br)
-    time.sleep(4)
+    time.sleep(5)
     change_status_for_closed(br)
 
 
