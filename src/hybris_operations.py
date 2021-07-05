@@ -32,7 +32,7 @@ def cut_pop_up(br):
 def open_browser(site_to_open):
     options = webdriver.ChromeOptions()
     options.add_argument('--lang=ru')
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument("window-size=1920,1080")
     br = webdriver.Chrome(options=options)
     br.maximize_window()
@@ -251,7 +251,7 @@ def select_product_for_new_sim(br):
     prod_num = randrange(len(product_list))
     WebDriverWait(br, 30).until(EC.element_to_be_clickable((By.XPATH, f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]")))
     product_name = br.find_element_by_xpath(f"//*[@id='facet-collapse-category']/div/div/div/div[1]/div/div[2]/div/ul/li[{prod_num + 1}]/a/span").text
-    while product_name == "Тарифы «Привет»" or product_name == "Тарифы для детей и молодёжи":
+    while product_name == "Тарифы «Привет»" or product_name == "Тарифы для детей и молодёжи" or product_name == "Социальные и специальные тарифы":
         try:
             prod_num = randrange(len(product_list))
             WebDriverWait(br, 30).until(EC.element_to_be_clickable(
