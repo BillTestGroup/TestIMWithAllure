@@ -344,6 +344,7 @@ def select_installment_for_new_customer(br):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Новый номер')]]/.."))).click()
     time.sleep(2)
+    cut_pop_up(br)
     combobox = br.find_element_by_xpath(
         "//*[@id='NEW_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
     combobox.click()
