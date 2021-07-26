@@ -1008,15 +1008,35 @@ def check_cart_with_accessory(br):
     cut_pop_up(br)
     br.find_element_by_xpath("//span[text()[contains(.,'Купить')]]/..").click()
 
+def check_error_visibility(br):
+    try:
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Заполните поле ')]]")))
+        return True
+    except:
+        return False
+
+
 @allure.step("Переход на окно 'Личные данные'")
-def personal_data_window(br):
+def personal_data_window(br, test_dude):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,' Личные данные')]]")))
-    time.sleep(8)
-    cut_pop_up(br)
     cut_pop_up(br)
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Далее')]]/.."))).click()
+    time.sleep(8)
+    cut_pop_up(br)
+    error = check_error_visibility(br)
+    while error == True:
+        br.find_element_by_xpath("//input[@name='contactPhone']").click()
+        br.find_element_by_xpath("//input[@name='contactPhone']").send_keys(test_dude.contact_phone)
+        WebDriverWait(br, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Далее')]]/.."))).click()
+        time.sleep(5)
+        error = check_error_visibility(br)
+    else:
+        pass
+
 
 
 @allure.step("Переход на окно 'Способ оплаты', выбор способа оплаты")
@@ -1595,7 +1615,7 @@ def buy_device_with_kasko(br, test_dude):
     add_full_kasko_to_order(br)
     go_to_cart(br)
     device_price = take_device_price_from_cart(br)
-    personal_data_window(br)
+    personal_data_window(br, test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     phone_monthly_payment, phone_full_price, kasko_full_price = order_with_prices_confirmation(br)
@@ -1631,7 +1651,7 @@ def buy_accessory(br, test_dude):
     select_accessory(br)
     step_2(br)
     check_cart_with_accessory(br)
-    personal_data_window(br)
+    personal_data_window(br,test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     device_price, monthly_payment, full_price = order_list(br)
@@ -1650,7 +1670,7 @@ def buy_device_with_kasko_installment(br, test_dude):
     add_kasko_installment_to_order(br)
     go_to_cart(br)
     device_price = take_device_price_from_cart(br)
-    personal_data_window(br)
+    personal_data_window(br, test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     phone_monthly_payment, phone_full_price, kasko_monthly_payment, kasko_full_price = order_with_installment_prices_confirmation(br)
@@ -1681,7 +1701,7 @@ def buy_new_sim(br, test_dude):
     select_product_for_new_sim(br)
     select_rate_plan_for_new_sim(br)
     rate_plan, product_price = take_data_from_cart(br)
-    personal_data_window(br)
+    personal_data_window(br, test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     check_order_details(br)
