@@ -1012,6 +1012,7 @@ def check_cart_with_accessory(br):
 def personal_data_window(br):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,' Личные данные')]]")))
+    time.sleep(5)
     cut_pop_up(br)
     cut_pop_up(br)
     WebDriverWait(br, 30).until(
