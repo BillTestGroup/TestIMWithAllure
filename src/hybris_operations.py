@@ -683,6 +683,7 @@ def fill_in_full_personal_data(br, test_dude):
     br.find_element_by_xpath("//*[@id='passportIssuedBy']").send_keys(test_dude.whoGivePassport)
     br.find_element_by_xpath("//*[@id='passportIssuedDate']").click()
     br.find_element_by_xpath("//*[@id='passportIssuedDate']").send_keys(test_dude.dateOfIssue)
+    cut_pop_up(br)
     # город
     br.find_element_by_xpath("//*[@aria-labelledby='select2-i-city_0-container']").click()
     br.find_element_by_xpath(
@@ -724,7 +725,7 @@ def fill_in_full_personal_data(br, test_dude):
     #контактный номер
     br.find_element_by_xpath("//input[@name='contactPhone']").click()
     br.find_element_by_xpath("//input[@name='contactPhone']").send_keys(test_dude.contact_phone)
-
+    cut_pop_up(br)
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Далее')]]/.."))).click()
     WebDriverWait(br, 30).until(EC.invisibility_of_element((By.XPATH, "//*[text()[contains(.,' Личные данные')]]/..")))
@@ -1011,6 +1012,7 @@ def check_cart_with_accessory(br):
 def personal_data_window(br):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,' Личные данные')]]")))
+    cut_pop_up(br)
     cut_pop_up(br)
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()[contains(.,'Далее')]]/.."))).click()
