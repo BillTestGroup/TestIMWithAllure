@@ -348,11 +348,13 @@ def select_installment_for_new_customer(br):
     combobox = br.find_element_by_xpath(
         "//*[@id='NEW_CONTRACT']//span[contains(@class, 'select2-selection select2-selection--single')]")
     combobox.click()
+    time.sleep(5)
     ac = ActionChains(br)
     ac.move_to_element(br.find_element_by_xpath("//*[@id='NEW_CONTRACT']//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'от Стартовый')]]/..")).perform()
-    time.sleep(3)
+    time.sleep(6)
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//*[@id='NEW_CONTRACT']//li/div[text()[contains(., '6 мес по ')]]/following-sibling::div[text()[contains(.,'от Стартовый')]]/.."))).click()
+    time.sleep(5)
     WebDriverWait(br, 30).until(
         EC.element_to_be_clickable((By.XPATH,
                                     "//*[@id='NEW_CONTRACT']//*[@class='live-filter-content-item active']//*[@class='price-block-button']"))).click()
