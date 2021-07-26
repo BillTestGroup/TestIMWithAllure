@@ -640,11 +640,22 @@ def take_data_from_cart(br):
     return rate_plan, product_price
 
 @allure.step("Переход на окно 'Личные данные'")
-def personal_data_view(br):
+def personal_data_view(br, test_dude):
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Личные данные')]]/..")))
     time.sleep(1)
     br.find_element_by_id("submitButton").click()
+    time.sleep(8)
+    cut_pop_up(br)
+    error = check_error_visibility(br)
+    while error == True:
+        br.find_element_by_xpath("//input[@name='contactPhone']").click()
+        br.find_element_by_xpath("//input[@name='contactPhone']").send_keys(test_dude.contact_phone)
+        br.find_element_by_id("submitButton").click()
+        time.sleep(5)
+        error = check_error_visibility(br)
+    else:
+        pass
     cut_pop_up(br)
 
 @allure.step("Заполнение полей на странице 'Личные данные'")
@@ -1541,7 +1552,7 @@ def buyTANaSimSix(br, test_dude):
     view_and_select_rate_plan(br)
     go_to_cart(br)
     device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
-    personal_data_view(br)
+    personal_data_view(br, test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     check_order_details(br)
@@ -1558,7 +1569,7 @@ def buyTANaSim24(br, test_dude):
     view_and_select_rate_plan(br)
     go_to_cart(br)
     device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
-    personal_data_view(br)
+    personal_data_view(br, test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     check_order_details(br)
@@ -1577,7 +1588,7 @@ def buyTANaSimEleven(br, test_dude):
     view_and_select_rate_plan(br)
     go_to_cart(br)
     device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
-    personal_data_view(br)
+    personal_data_view(br, test_dude)
     select_delivery_method(br, test_dude)
     select_payment_method(br)
     check_order_details(br)
