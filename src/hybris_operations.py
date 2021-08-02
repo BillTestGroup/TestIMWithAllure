@@ -800,7 +800,7 @@ def select_delivery_method_for_new_customer(br, test_dude):
         cut_pop_up(br)
         # город
         br.find_element_by_xpath("//*[@aria-labelledby='select2-i-city_0-container']").click()
-        time.sleep(3
+        time.sleep(3)
         br.find_element_by_xpath(
             "//span[text()[contains(.,'Населенный пункт')]]/../following-sibling::span//input").send_keys(
             test_dude.city)
