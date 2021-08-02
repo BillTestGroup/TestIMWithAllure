@@ -461,13 +461,17 @@ def view_and_select_rate_plan(br):
 
 @allure.step("Переход в корзину")
 def go_to_cart(br):
-    WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]")))
-    cut_pop_up(br)
-    WebDriverWait(br, 30).until(
-        EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]"))).click()
-    WebDriverWait(br, 30).until(
-        EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]/..")))
+    try:
+        visibility =  WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]")))
+        if visibility:
+            cut_pop_up(br)
+            WebDriverWait(br, 30).until(
+                EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]"))).click()
+            WebDriverWait(br, 30).until(
+                EC.invisibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]/..")))
+    except:
+        pass
 
 
 
@@ -1752,6 +1756,7 @@ def buy_full_price_device(br, test_dude, login, passw):
     select_brand(br)
     select_product(br)
     select_type_of_sale_full_price(br)
+    time.sleep(7)
     go_to_cart(br)
     device_price = take_full_price_value_for_equipment(br)
     select_i_am_contract(br)
