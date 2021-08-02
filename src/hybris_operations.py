@@ -800,37 +800,37 @@ def select_delivery_method_for_new_customer(br, test_dude):
         cut_pop_up(br)
         # город
         br.find_element_by_xpath("//*[@aria-labelledby='select2-i-city_0-container']").click()
-        time.sleep(1)
+        time.sleep(3
         br.find_element_by_xpath(
             "//span[text()[contains(.,'Населенный пункт')]]/../following-sibling::span//input").send_keys(
             test_dude.city)
-        time.sleep(1)
+        time.sleep(3)
         br.find_element_by_xpath("//*[@id='select2-i-city_0-results']/li[1]").click()
-        time.sleep(1)
+        time.sleep(3)
         # улица
         br.find_element_by_xpath("//*[@aria-labelledby='select2-i-street_1-container']").click()
         br.find_element_by_xpath(
             "//span[text()[contains(.,'Улица (если есть)')]]/../following-sibling::span//input").send_keys(
             test_dude.street)
-        time.sleep(1)
+        time.sleep(3)
         br.find_element_by_xpath("//*[@id='select2-i-street_1-results']/li").click()
-        time.sleep(1)
+        time.sleep(3)
         # дом
         br.find_element_by_xpath("//label[@for='i-house_2']").click()
-        time.sleep(1)
+        time.sleep(3)
         br.find_element_by_xpath("//span[text()[contains(.,'Дом')]]/../following-sibling::span//input").send_keys(
             test_dude.house)
-        time.sleep(1)
+        time.sleep(3)
         br.find_element_by_xpath("//*[@id='select2-i-house_2-results']/li").click()
-        time.sleep(1)
+        time.sleep(3)
         # корпус
         br.find_element_by_xpath("//label[@for='i-corp_3']").click()
-        time.sleep(1)
+        time.sleep(3)
         br.find_element_by_xpath("//span[text()[contains(.,'Корп.')]]/../following-sibling::span//input").send_keys(
             test_dude.building)
-        time.sleep(1)
+        time.sleep(3)
         br.find_element_by_xpath("//*[@id='select2-i-corp_3-results']/li").click()
-        time.sleep(1)
+        time.sleep(3)
         # кв.\офис
         br.find_element_by_xpath("//input[@id='i-room_4']").click()
         br.find_element_by_xpath("//input[@id='i-room_4']").send_keys(test_dude.appartment)
