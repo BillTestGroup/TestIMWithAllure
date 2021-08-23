@@ -27,7 +27,16 @@ def br():
     site = 'https://corporate.a1.by/shop/'
     br = HB.open_browser(site)
     yield br
-    br.save_screenshot("./screenshots/"+(str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
+    print(f"\nSCREENSHOT: " + (str(time.strftime('%Y-%m-%d-%H-%M'))))
+    s = br.get_window_size()
+    # obtain browser height and width
+    w = br.execute_script('return document.body.parentNode.scrollWidth')
+    h = br.execute_script('return document.body.parentNode.scrollHeight')
+    # set to new window size
+    br.set_window_size(w, h)
+    # obtain screenshot of page within body tag
+    br.save_screenshot("./screenshots/" + (str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
+    br.set_window_size(s['width'], s['height'])
     br.quit()
 
 @allure.title("Покупка оборудования со скидкой клиентом Юридическим лицом")

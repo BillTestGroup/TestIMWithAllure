@@ -16,7 +16,15 @@ def br():
     br = HB.open_browser(site)
     yield br
     print(f"\nSCREENSHOT: " + (str(time.strftime('%Y-%m-%d-%H-%M'))))
-    br.save_screenshot("./screenshots/"+(str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
+    s = br.get_window_size()
+    # obtain browser height and width
+    w = br.execute_script('return document.body.parentNode.scrollWidth')
+    h = br.execute_script('return document.body.parentNode.scrollHeight')
+    # set to new window size
+    br.set_window_size(w, h)
+    # obtain screenshot of page within body tag
+    br.save_screenshot("./screenshots/" + (str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
+    br.set_window_size(s['width'], s['height'])
     br.quit()
 
 @allure.title("Покупка новой сим с подключением и оборудованием")
