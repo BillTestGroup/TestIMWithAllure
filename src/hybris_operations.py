@@ -378,9 +378,9 @@ def select_type_of_sale_with_discount(br):
     time.sleep(3)
     br.find_element_by_tag_name('body').send_keys(u'\ue00f')
     ac = ActionChains(br)
-    ac.move_to_element(br.find_element_by_xpath("//div/button[text()[contains(., 'Цена со скидкой')]]")).perform()
+    ac.move_to_element(br.find_element_by_xpath("//div/button[text()[contains(., 'Цена со скидкой')]]/small[text()[contains(.,'С обслуживанием не менее 12')]]/..")).perform()
     WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//div/button[text()[contains(., 'Цена со скидкой')]]"))).click()
+        EC.visibility_of_element_located((By.XPATH, "//div/button[text()[contains(., 'Цена со скидкой')]]/small[text()[contains(.,'С обслуживанием не менее 12')]]/.."))).click()
     time.sleep(2)
     # нажимаем купить
     br.find_element_by_xpath("//button[text()[contains(.,'Купить')]]/..").click()
