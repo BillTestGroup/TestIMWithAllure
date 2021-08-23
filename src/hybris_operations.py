@@ -1,3 +1,4 @@
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -190,6 +191,12 @@ def select_brand_(br):
     br.find_element_by_xpath(
         "//*[@id=\"facet-collapse-brand\"]/div/div/div/div[1]/div/div[2]/div/ul/li[2]/form/div/label").click()
 
+def check_order_button_presence(br):
+    try:
+        order_button_presence = br.find_element_by_xpath("//span[text()[contains(.,'Перейти к покупке')]]")
+        return order_button_presence
+    except (NoSuchElementException):
+        return False
 
 @allure.step("Выбор бренда оборудования для покупки")
 def select_brand_for_legal(br):
@@ -214,14 +221,12 @@ def select_brand_for_legal(br):
         brand_list[brand_num].click()
 
     time.sleep(5)
-    try:
-        if br.find_elements_by_xpath("//span[text()[contains(.,'Перейти к покупке')]]"):
-            pass
-        else:
-            br.find_element_by_xpath("page-nav__link page-nav__arrow page-nav__arrow--next").click()
-            time.sleep(5)
-    except:
-        pass
+    order_button_presence = check_order_button_presence(br)
+    while not (order_button_presence):
+        br.find_element_by_xpath("//a[@class = 'page-nav__link page-nav__arrow page-nav__arrow--next']").click()
+        time.sleep(5)
+        order_button_presence = check_order_button_presence(br)
+
 
 @allure.step("Выбор модели оборудования для покупки")
 def select_product(br):
