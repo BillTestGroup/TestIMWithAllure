@@ -370,7 +370,13 @@ def select_installment_for_new_customer(br):
         EC.element_to_be_clickable((By.XPATH,
                                     "//*[@id='NEW_CONTRACT']//*[@class='live-filter-content-item active']//*[@class='price-block-button']"))).click()
 
-
+def check_visibility_of_type_of_sale(br):
+    try:
+        WebDriverWait(br, 60).until(
+            EC.visibility_of_element_located((By.XPATH, "//div/button[text()[contains(., 'Цена со скидкой')]]")))
+        return True
+    except:
+        return False
 
 @allure.step("Выбор типа продажи 'Со скидкой'")
 def select_type_of_sale_with_discount(br):
@@ -382,11 +388,21 @@ def select_type_of_sale_with_discount(br):
     combobox.click()
     time.sleep(3)
     br.find_element_by_tag_name('body').send_keys(u'\ue00f')
-    ac = ActionChains(br)
-    ac.move_to_element(br.find_element_by_xpath("//div/button[text()[contains(., 'Цена со скидкой')]]/small[text()[contains(.,'С обслуживанием не менее 12')]]/..")).perform()
-    WebDriverWait(br, 30).until(
-        EC.visibility_of_element_located((By.XPATH, "//div/button[text()[contains(., 'Цена со скидкой')]]/small[text()[contains(.,'С обслуживанием не менее 12')]]/.."))).click()
-    time.sleep(2)
+    check_visibility_of_type_of_sale(br)
+    if check_visibility_of_type_of_sale(br):
+        ac = ActionChains(br)
+        ac.move_to_element(br.find_element_by_xpath("//div/button[text()[contains(., 'Цена со скидкой')]]")).perform()
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH, "//div/button[text()[contains(., 'Цена со скидкой')]]"))).click()
+        time.sleep(2)
+    else:
+        ac = ActionChains(br)
+        ac.move_to_element(br.find_element_by_xpath(
+            "//div/button[text()[contains(., 'Цена со скидкой')]]/small[text()[contains(.,'С обслуживанием не менее 12')]]/..")).perform()
+        WebDriverWait(br, 30).until(
+            EC.visibility_of_element_located((By.XPATH,
+                                              "//div/button[text()[contains(., 'Цена со скидкой')]]/small[text()[contains(.,'С обслуживанием не менее 12')]]/.."))).click()
+        time.sleep(2)
     # нажимаем купить
     br.find_element_by_xpath("//button[text()[contains(.,'Купить')]]/..").click()
 
