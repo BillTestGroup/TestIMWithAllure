@@ -1064,6 +1064,20 @@ def order_confirmation_for_legal(br):
     external_id = br.find_element_by_xpath("//div[text()[contains(.,'в наличии')]]").text
     time.sleep(3)
     return external_id
+###########################################################################
+@allure.step("Переход на вкладку 'Умный дом'")
+def go_to_smart_home(br):
+    WebDriverWait(br, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "//a[text()[contains(.,'Умный дом')]]/.."))).click()
+    WebDriverWait(br, 30).until(EC.visibility_of_element_located((By.XPATH,
+                                                                  "//a[text()[contains(.,'Умный дом')]]/../../div[contains(@class, 'tabs-controls-item active is-visible is-selected')]")))
+    cut_pop_up(br)
+
+@allure.step("Выбор smart обрудования")
+def select_smart_item(br):
+    WebDriverWait(br, 30).until(EC.element_to_be_clickable((By.XPATH, "//h3[text()[contains(.,'Умная розетка')]]/../../a"))).click()
+    WebDriverWait(br, 60).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[contains(@class, 'live-filter-content-item active')]")))
 
 ###########################################################################
 @allure.step("Переход на вкладку 'Аксессуары'")
@@ -2044,7 +2058,23 @@ def buy_as_predzakaz(br, test_dude):
     device_price, monthly_payment, full_price = order_list(br)
     external_id = order_confirmation_for_predzakaz(br)
     return external_id, device_price, monthly_payment, full_price
-###########################################################################
+################################################################################################
+@allure.description("Оформление покупки нетерминального оборудования в рассрочку (розетка для умного дома)")
+@allure.step("Выбор нетерминального оборудования, выбор типа продажи, переход в корзину и оформление покупки")
+def buy_item_for_smart_home(br, test_dude):
+    go_to_smart_home(br)
+    select_smart_item(br)
+    select_type_of_sale_rassrochka_11(br)
+    step_2(br)
+    check_cart_with_accessory(br)
+    personal_data_window(br, test_dude)
+    select_delivery_method(br, test_dude)
+    select_payment_method(br)
+    device_price, monthly_payment, full_price = order_list(br)
+    select_payment_method_for_order(br)
+    external_id = order_confirmation(br)
+    return external_id, device_price, monthly_payment, full_price
+
 ##############################################################################
 @allure.description("Покупка оборудования со скидкой клиентом Юридическим лицом")
 @allure.step("Покупка оборудования со скидкой клиентом Юридическим лицом")
