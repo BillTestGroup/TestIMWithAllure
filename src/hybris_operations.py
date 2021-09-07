@@ -2026,6 +2026,24 @@ def buy_ta_s_novoy_sim(br, test_dude):
     return device_price, monthly_payment, full_price
 
 
+def buy_accessory_s_novoi_sim(br, test_dude):
+    go_to_accessory(br)
+    select_brand_for_accessory(br)
+    select_product(br)
+    check_accessory_page(br)
+    select_accessory_for_new_contract(br)
+    step_2(br)
+    select_rate_plan_for_new_contract(br)
+    device_price, monthly_payment, full_price = take_price_values_for_equipment(br)
+    select_i_am_guest(br)
+    put_contact_data(br, test_dude)
+    fill_in_full_personal_data(br, test_dude)
+    select_delivery_method_for_new_customer(br, test_dude)
+    select_payment_method_(br)
+    check_order_details(br)
+    order_confirmation_for_new_custmer(br)
+    return device_price, monthly_payment, full_price
+
 @allure.description("Поиск и открытие созданной заявки для сравнения данных и закрытия заявки")
 @allure.step("Анализ данных заявки, сравнение данных и закрытие заявки")
 def check_wso_installment_for_new(br, test_dude, device_price, monthly_payment, full_price):

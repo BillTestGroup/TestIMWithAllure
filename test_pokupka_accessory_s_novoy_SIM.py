@@ -1,0 +1,50 @@
+import time
+import pytest
+from src import hybris_operations as HB, ma_dudes as dudes
+import allure
+
+test_dude = dudes.Private_dude
+vix_creds = dudes.VIX_credentials
+wso = dudes.WSO_prod
+login = test_dude.login
+passw = test_dude.password
+dateOfBirth = test_dude.dateOfBirth
+serialPasport = test_dude.serialPasport
+numberPassport = test_dude.numberPassport
+identifirePassport = test_dude.identifirePassport
+dateOfIssue = test_dude.dateOfIssue
+whoGivePassport = test_dude.whoGivePassport
+phoneNumber = test_dude.phoneNumber
+city = test_dude.city
+street = test_dude.street
+house = test_dude.house
+building = test_dude.building
+appartment = test_dude.appartment
+contact_phone = test_dude.contact_phone
+
+
+#fixture
+@pytest.fixture
+def br():
+    site = 'https://www.a1.by/ru/'
+    br = HB.open_browser(site)
+    yield br
+    print(f"\nSCREENSHOT: " + (str(time.strftime('%Y-%m-%d-%H-%M'))))
+    s = br.get_window_size()
+    # obtain browser height and width
+    w = br.execute_script('return document.body.parentNode.scrollWidth')
+    h = br.execute_script('return document.body.parentNode.scrollHeight')
+    # set to new window size
+    br.set_window_size(w, h)
+    # obtain screenshot of page within body tag
+    br.save_screenshot("./screenshots/" + (str(time.strftime('%Y-%m-%d-%H-%M'))) + ".png")
+    br.set_window_size(s['width'], s['height'])
+    br.quit()
+
+@allure.title("Новый клиент/Новый номер - Покупка аксессуара в рассрочку")
+def test_pokupka_accessory_s_novoy_SIM(br):
+    HB.check_cart(br)
+    device_price, monthly_payment, full_price = HB.buy_accessory_s_novoi_sim(br, test_dude)
+    time.sleep(80)
+    HB.log_in_wso(br, wso, vix_creds)
+    HB.check_wso_installment_for_new(br, test_dude, device_price, monthly_payment, full_price)
