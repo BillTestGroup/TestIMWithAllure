@@ -27,7 +27,8 @@ def br():
     br.set_window_size(s['width'], s['height'])
     br.quit()
 
-@allure.title("Покупка оборудования по полной стоимости")
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
+@allure.title("Покупка оборудования по полной стоимости (с выбором опции Я абонент A1)")
 def test_Pokupka_TA_bez_sim_i_skidki(br):
     HB.login_site(br, login, passw)
     HB.check_cart(br)

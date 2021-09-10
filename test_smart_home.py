@@ -26,6 +26,7 @@ def br():
     br.set_window_size(s['width'], s['height'])
     br.quit()
 
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
 @allure.title("Покупка нетерминального оборудования в рассрочку (розетка для умного дома)")
 def test_smart_home(br):
     HB.login_site(br, login, passw)

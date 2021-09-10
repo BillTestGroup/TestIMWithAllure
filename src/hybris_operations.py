@@ -535,6 +535,7 @@ def view_and_select_rate_plan(br):
 
 @allure.step("Переход в корзину")
 def go_to_cart(br):
+    cut_pop_up(br)
     try:
         visibility =  WebDriverWait(br, 30).until(
             EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Перейти в корзину')]]")))
@@ -771,7 +772,6 @@ def fill_in_short_personal_data(br, test_dude):
 
 @allure.step("Заполнение полей на странице 'Личные данные'")
 def fill_in_full_personal_data(br, test_dude):
-    cut_pop_up(br)
     WebDriverWait(br, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,' Личные данные')]]/..")))
     cut_pop_up(br)
@@ -2025,7 +2025,49 @@ def buy_ta_s_novoy_sim(br, test_dude):
     order_confirmation_for_new_custmer(br)
     return device_price, monthly_payment, full_price
 
+##############################################################################
+@allure.description("Покупка оборудования по полной стоимости новым клиентом")
+@allure.step("Покупка оборудования по полной стоимости новым клиентом")
+def buy_ta_full_price(br, test_dude):
+    select_brand(br)
+    select_product(br)
+    time.sleep(5)
+    select_type_of_sale_full_price(br)
+    time.sleep(5)
+    go_to_cart(br)
+    device_price = take_full_price_value_for_equipment(br)
+    select_i_am_guest(br)
+    put_contact_data(br, test_dude)
+    time.sleep(5)
+    fill_in_short_personal_data(br, test_dude)
+    select_delivery_method_for_new_customer(br, test_dude)
+    select_payment_method_(br)
+    check_order_details(br)
+    order_confirmation_for_new_custmer(br)
+    return device_price
 
+
+@allure.description("Проверка данных по покупке оборудования по полной стоимости в WSO")
+@allure.step("Проверка данных по покупке оборудования по полной стоимости в WSO")
+def check_wso_full_price_device_for_a_guest(br, test_dude, device_price):
+    select_menu_internet_shop(br)
+    find_order_by_customer_name(br, test_dude)
+    view_search_results(br)
+    view_search_results(br)
+    compare_fio(br, test_dude)
+    view_order_details(br)
+    check_fio(br, test_dude)
+    check_adres(br, test_dude)
+    check_full_price(br, device_price)
+    change_status_for_rejected(br)
+    time.sleep(4)
+    change_status_for_closed(br)
+
+
+
+#####################################
+@allure.description("Покупка аксессуара в рассрочку новым клиентом на новый номер")
+@allure.step("Покупка аксессуара в рассрочку новым клиентом на новый номер")
 def buy_accessory_s_novoi_sim(br, test_dude):
     go_to_accessory(br)
     select_brand_for_accessory(br)

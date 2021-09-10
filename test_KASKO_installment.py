@@ -27,7 +27,8 @@ def br():
     br.set_window_size(s['width'], s['height'])
     br.quit()
 
-@allure.title("Оформление покупки оборудования с Каско в рассрочку")
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
+@allure.title("8.	Покупка ТА в рассрочку на 24 месяца + КАСКО в рассрочку")
 # IM_KASKO
 def test_IM_KASKO(br):
     HB.login_site(br, login, passw)

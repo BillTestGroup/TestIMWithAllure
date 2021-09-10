@@ -39,6 +39,7 @@ def br():
     br.set_window_size(s['width'], s['height'])
     br.quit()
 
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
 @allure.title("Покупка оборудования со скидкой клиентом Юридическим лицом")
 def test_buy_TA_legal(br):
     HB.check_cart_legal(br)

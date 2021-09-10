@@ -29,7 +29,8 @@ def br():
 
 
 # IM_KASKO
-@allure.title("Оформление покупки оборудования вместе с Каско")
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
+@allure.title("Покупка ТА в рассрочку на 24 месяца  + КАСКО по полной стоимости")
 def test_IM_KASKO(br):
     HB.login_site(br, login, passw)
     HB.check_cart(br)

@@ -28,16 +28,11 @@ def br():
     br.quit()
 
 @allure.suite("Покупка оборудования в интернет-магазине А1.")
-@allure.title("Покупка новой сим с подключением и оборудованием")
-# IM_Accessories
-def test_IM_New_SIM(br):
-    HB.login_site(br, login, passw)
+@allure.title("Покупка оборудования по полной стоимости Как гость")
+def test_Pokupka_TA_as_guest_full_price(br):
     HB.check_cart(br)
-    # - перейти в тарифы
-    br.get("https://www.a1.by/ru/plans/c/b2ctariffs")
     HB.cut_pop_up(br)
-    external_id, rate_plan, product_price = HB.buy_new_sim(br, test_dude)
-    HB.wait_for_order_in_work(br)
-    time.sleep(30)
+    device_price = HB.buy_ta_full_price(br, test_dude)
+    time.sleep(80)
     HB.log_in_wso(br, wso, vix_creds)
-    HB.check_wso_new_sim(br, test_dude, external_id, rate_plan, product_price)
+    HB.check_wso_full_price_device_for_a_guest(br, test_dude, device_price)

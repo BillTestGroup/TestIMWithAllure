@@ -27,7 +27,9 @@ def br():
     br.set_window_size(s['width'], s['height'])
     br.quit()
 
-@allure.title("Покупка телефона клиентом ФЛ аксессуара")
+
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
+@allure.title("Покупка клиентом ФЛ аксессуара в рассрочку на существующий номер")
 # IM_Accessories
 def test_IM_Accessories(br):
     HB.login_site(br, login, passw)

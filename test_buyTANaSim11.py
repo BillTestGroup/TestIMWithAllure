@@ -27,6 +27,7 @@ def br():
     br.set_window_size(s['width'], s['height'])
     br.quit()
 
+@allure.suite("Покупка оборудования в интернет-магазине А1.")
 @allure.title("Покупка телефона клиентом ФЛ в рассрочку на 11 месяцев")
 def test_buyTANaSimEleven(br):
     HB.login_site(br, login, passw)
