@@ -5,7 +5,7 @@ WSO_prod = "http://als-bscs.main.velcom.by/webShopOMS/login.xhtml"
 
 class VIX_credentials():
     prod_login = "ANNAPES"
-    prod_password = "anna.pesetskaya1"
+    prod_password = "anna.pesetskaya2"
 
 
 class Private_dude():
